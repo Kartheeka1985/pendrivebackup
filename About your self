@@ -1,0 +1,57 @@
+                                       About your self
+Hi,
+My name is kartheek varma. I completed Mba from Avanti instruction of engg and tech with an affiliate to Jntu. I did complete my BSc 
+from brbm degree college with an affiliate to Au.
+
+I have overall 5 years of experience in an iT industry. Include 3 years of experience in salesforce.com  
+Administer Developer ment, configuration, implementation, and support. Remaining 2 years of Sap mm.
+
+I worked in all stages of software developer lifecycle requirement,  gathering, designing, testing, implementation , and support.
+And I worked with many custom objects as well as standard objects and I used to provide validation rules, workflow, and
+ approval 
+process . For auto respond rules and field updates, assignment rules and emails notification as per business requirement.
+
+I experenced in salescloud and service cloud and force.com Ide .Sales cloud I was implement completed process and also 
+core management for the force.com plateform.
+Service cloud i was work the Highvolum potals and customportals and public Knowledge potals.
+
+I was created many custom reports and dashboards, analytical snapshots, and also created many 
+custom reports types and Dynamic dashboards and  Custom settings, custom labels, to meet the reporting needs of the  organization.
+
+I was created many  customized custom and standard fileds,page layouts and records types, searching list views, and  profiles,  objects, roles and permission sets and relationships ,
+the public groups and sharing settings OWD and manual sharings.
+I have used  to involved in mass import and export of data using  migration tools are data loader and import wizard.
+
+Coming to my development experience designing the applications and write  apex class and  triggers using custom controllers
+ as well as standard controllers, and Control extension and binding the varies Sales force components.
+I was develope in  vf pages and used soQl and sosl and using DML statements.
+I worked on standard objects data accumulation, batch apex classes and schedule batch  jobs,
+ according to the business requirement.
+
+Supported application coad development from test to production enverinment using chain set and force.com ide.
+
+I have Basic knowledge of web services and soap, rest API and force.com callouts. 
+This is about myself.
+=====================================================================================================================================
+Project:-
+---------------
+Right Now My project is Campmor crm .The retail stores is in paramus in new jersey.Basicalle we are Directly interact with client and based on the user stories we are implement to Partner registration � Automated the partner registration process. Created web to lead form, Trigger, workflow, Validation to automate this process.
+
+IN organization has existing website hosted from force.com platform. Now new forms has been added to those sites. It is like an input form which creates new entries in Salesforce internal database from site. Say, a church affiliation site. New form creates Child information and legal guardian information with all details. 
+
+And New login page addition in site and displaying step by step forms there. Organization has contact in its database. If existing contact username password matches ,that provides facility to log in. Or to register  a new user. Then User can see all the events of organization based on his/her profile visibility and also can fill up Profile data and operate many table from input forms there. 
+
+Lead convert is an existing feature of Salesforce. It has some flow of actions automatically performed while a Lead is converted to contact or account. Customization of Lead convert via trigger fired just after the lead is converted provides additional features needed like Create to extra contacts from Parent information of converted Lead . 
+
+Product Type Mapping � Created trigger to populate the  Opportunity product type based on their line items mapping stored in custom setting.
+And tracks the consumer purchases, their update contact detailes and tracking down their locations of purchases.
+
+After to greet the customers on their birthdays and anniversaries and saving all these importance information of consumers.
+
+//Often there is online gift sending portals. There new Visualforce page has been hosted with options to select gifts and place order to database. 
+
+Detailed Custom Reports (with filters, conditional highlighting, subtotals, and charts) and Dashboards (with different components on a single page) were created to facilitate consumer data overview and drill-down. Visualforce was used to create custom user interfaces as per the client's business needs.
+
+
+
+
