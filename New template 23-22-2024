@@ -1,0 +1,2312 @@
+Backup
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                controller="LwcRegistertemplateController" access="global">
+    <aura:attribute name="documentList" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.fetchRecords}" />
+    <aura:attribute name="fixedHeader" type="String" />
+    <aura:attribute name="isOpen" type="Boolean" default="false" />
+    <aura:attribute name="isBannerVisible" type="Boolean" default="false" />
+    <aura:attribute name="lastScrollTop" type="Integer" default="0" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="destroy" value="{!this}" action="{!c.onDestroy}"/>
+    <aura:attribute name="showSection1" type="Boolean" default="true" />
+    <aura:attribute name="showSection2" type="Boolean" default="true" />
+    <aura:attribute name="showSection3" type="Boolean" default="true" />
+    <aura:attribute name="showSection4" type="Boolean" default="true" />
+    <aura:attribute name="showSection5" type="Boolean" default="true" />
+    <aura:attribute name="showSection6" type="Boolean" default="true" />
+   <!-- Attribute to hold rows -->
+    <aura:attribute name="rows" type="List" default="[{'fileName':'','description':''}]" />
+    <aura:attribute name="maxRows" type="Integer" default="5" />
+    <aura:attribute name="errorMessage" type="String" default="" />
+    
+    <!--Record Id of current object where this component will be added. -->
+    <aura:attribute name="recordId" type="Id" />
+    <!--Showing spinner while uploading -->
+    <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <!--List of file which are uploaded -->
+    <aura:attribute name="FilesUploaded" type="List" />
+	 <!-- Attribute to store dynamic rows data -->
+   
+    
+    <aura:attribute name="numberOfRows" type="Integer" description="Number of Rows to add dynamically" access="private" default="1" />
+    <aura:attribute name="dynamicRowsList" type="List" description="List of Rows that are created dynamically" access="private" />
+    <aura:attribute name="message" type="String" default="" description="Success or error message" access="private" />
+    <aura:attribute name="messageType" type="String" description="Success or error message type" access="private" />
+    <aura:attribute name="picklistOptions" type="List" />
+    <aura:attribute name="picklistOptions1" type="List" />
+    <aura:attribute name="picklistOptions2" type="List" />
+    <html tag="style">
+        body, html {
+        margin: 0;
+        padding: 0;
+        }
+        
+        .section {
+        min-height: 800px;
+        position: relative;
+        text-align: center;
+        font-family: sans-serif, arial;
+        margin: 0;
+        }
+        
+        
+        
+        .text-wr {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        }
+        
+        #section1 {
+        //background: #5c53aa;
+        //  color: #8d86c3;
+        border-top: 5px solid #FCB900 !important;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        list-style: none;
+        margin: 0;
+        padding: 0            
+        }
+        .section1 li { 
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        animation: imageAnimation 50s linear infinite; 
+        }
+        
+        .section1 li:nth-child(1) { 
+        background-image: url(http://i.imgur.com/K3mPv14.jpg);
+        }
+        .section1 li:nth-child(2) { 
+        background-image: url(http://i.imgur.com/SBEmFpv.jpg);
+        animation-delay: 10s; 
+        }
+        .section1 li:nth-child(3) { 
+        background-image: url(http://i.imgur.com/emvhOnb.jpg);
+        animation-delay: 20s; 
+        }
+        .section1 li:nth-child(4) { 
+        background-image: url(http://i.imgur.com/2LSMCmJ.jpg);
+        animation-delay: 30s; 
+        }
+        .section1 li:nth-child(5) { 
+        background-image: url(http://i.imgur.com/TVGe0Ef.jpg);
+        animation-delay: 40s; 
+        }
+        
+        @keyframes imageAnimation { 
+        0% { 
+        opacity: 0; 
+        animation-timing-function: ease-in;
+        }
+        10% {
+        opacity: 1;
+        animation-timing-function: ease-out;
+        }
+        20% {
+        opacity: 1;
+        }
+        30% {
+        opacity: 0;
+        }
+        }
+        
+        #section2 {
+        background-color: #041e39; !important;
+        color: #ffffff; /* White text color */
+        padding: 20px; /* Add some padding */
+        border-radius: 5px; /* Optional: round the corners */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Optional: add a shadow */
+        }
+        
+        #section3 {
+        background: #ffffff;
+        color: #686e7c;
+        }
+        
+        #section4 {
+        background-color: #041e39; !important;
+        color: #ffffff; /* White text color */
+        border: 5px solid #FCB900;
+        border-right:hidden;
+        border-left:hidden;
+        }
+        
+        h1 {
+        font-size: 50px;
+        margin-bottom: 25px;
+        }
+        
+        .title-top {
+        font-size: 60px;
+        padding-bottom: 30px;
+        }
+        
+        .title-tx {
+        font-size: 20px;
+        opacity: 0.8;
+        }
+        .text-warning{
+        color: #fff !important;
+        }
+        .nav {
+        position: absolute; /*left: 50%;*/
+        width: 100%;
+        top: 20px;
+        z-index: 9;
+        padding-left: 10px;
+        left: 30%;
+        border:none;
+        }
+        
+        .nav a {
+        padding: 7px 20px;
+        border-radius: 7px;
+        margin-right: 10px;
+        //background: rgba(255, 255, 255, 0.5);
+        -webkit-transition: all 0.2s ease-out;
+        -moz-transition: all 0.2s ease-out;
+        -ms-transition: all 0.2s ease-out;
+        -o-transition: all 0.2s ease-out;
+        transition: all 0.2s ease-out;
+        text-decoration: none;
+        color: black;
+        font-family: sans-serif, arial;
+        font-weight: 100;
+        }
+        
+        .nav a.active {
+        // background: rgba(0, 0, 0, 0.5);
+        //color: #fff !important;
+        text-decoration: none;
+        }
+        
+        .nav a:hover {
+        text-decoration: none;
+        //background: rgba(255, 255, 255, 0.7);
+        }
+        
+        .fork-wr img {
+        position: absolute;
+        z-index: 99;
+        top: 10px;
+        left: 150px;
+        border: 0;
+        }
+        
+        .logo-inner {
+        width: 120px;
+        height: 120px;
+        margin-top: -15px;
+        margin-left: 15px;
+        }
+        
+        .flame-topbar__menu-button {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        background: #FCB900;
+        color: white;
+        font-size: 16px;
+        font-weight: 400;
+        transition: background-color 0.3s;
+        box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
+        text-transform: uppercase;
+        text-decoration: none;
+        letter-spacing: 0;
+        z-index: 999; /* Ensure it stays above all content */
+        }
+        
+        .flame-topbar__menu-button:hover,
+        .flame-topbar__menu-button:focus {
+        background-color: #1d3557;
+        }
+        .menu-btn {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 25px;
+        background: transparent;
+        border: none;
+        }
+        
+        .line {
+        width: 100%;
+        height: 4px;
+        background-color: white;
+        border-radius: 2px;
+        transition: 0.3s;
+        }
+        .progress-line {
+        transform-origin: left;
+        z-index: 9999;
+        scale: 0 1;
+        animation-name: progressLine;
+        animation-timing-function: linear;
+        animation-timeline: scroll();
+        }
+        .section-padding {
+        padding: 90px 0;
+        }
+        #projectTab li button.active {
+        color: yellow !important;
+        background-color: #121212 !important;
+        }
+        
+        @keyframes progressLine {
+        to {
+        scale: 1 1;
+        }
+        }
+    </html>
+    <!-- External Stylesheets -->
+    <ltng:require styles="{!$Resource.stylesheet1}" />
+    <ltng:require styles="{!$Resource.stylesheet3}" />
+    <ltng:require styles="{!$Resource.Googlefont}" />
+    
+   <div id="section1" class="section" data-section="section1" style="{!v.showSection1 ? '' : 'display:none;'}">
+        <!-- first header -->
+        <div class="flame-topbar__menu-button" onclick="{!c.toggleSidenav}">
+            <a aria-controls="flame-site-menu" aria-expanded="false" class="flame-topbar__menu-button flame-js-site-menu-button" data-gtm="mearch-button" href="#footer" onclick="return false;">
+                <span class="menu-text">Menu</span>
+                <img alt="" class="close-x" src="https://www.flame.edu.in/images/menu-mag.svg" />
+            </a>
+        </div>
+   <!-- Section-1 start -->  
+        
+       
+            <ul class="section1">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            
+            <div class="fork-wr" >
+                <a href="https://www.flame.edu.in" target="_blank">
+                    <img src="https://www.flame.edu.in/images/white-Logo-FLAME.svg" class="logo-inner" alt="FLAME University Logo" />
+                </a>
+            </div>
+            
+            <div class="nav">
+                <nav>
+                    <a href="#section5" class="link-opacity-50-hover" style="color: #fff !important;">Home</a>
+                    <a href="#section1" class="link-opacity-50-hover" style="color: #fff !important;">Request Document Details</a>
+                    <a href="#section2" class="link-opacity-50-hover" style="color: #fff !important;">Request Document</a>
+                    <a href="#section3" class="link-opacity-50-hover" style="color: #fff !important;">Request Assistance</a>
+                    <a href="#section4" class="link-opacity-25-hover" style="color: #fff !important;">Section 4</a>
+                </nav>
+            </div>
+        
+        
+        <div class="text-wr">
+            <h1 class="title">
+                <div class="title-top">FLAME UNIVERSITY</div>
+                <div class="title-tx">LIBERAL EDUCATION</div>
+            </h1>
+     </div>
+     
+      <!-- second header -->  
+        <aura:if isTrue="{!v.isBannerVisible}" >
+            <div class="progress-line bg-warning py-1 w-100 position-fixed top-0"></div>  
+            <header class="sticky-top bg-light" id="header" >
+                <div class="header border-bottom border-secondary-subtle py-2">
+                    <div class="container" >
+                        <div class="row">
+                            <div class="col-md-12 d-flex align-items-center justify-content-between">
+                                <img alt="FLAME University" class="flame-topbar__logo-img" id="top_mark" src="https://www.flame.edu.in/images/FLAME-Logo.png" />
+                                <div class="nav">
+                                    <nav >
+                                        <a href="#section5" class="link-opacity-50-hover" >Home</a>
+                                        <a href="#section1" class="link-opacity-50-hover">Request Document Details</a>
+                                        <a href="#section2" class="link-opacity-50-hover">Request Document</a>
+                                        <a href="#section3" class="link-opacity-50-hover">Request Assistance</a>
+                                        <a href="#section4" class="link-opacity-25-hover">Section 4</a>
+                                    </nav>
+                                </div>
+                                <div class="flame-topbar__menu-button" onclick="{!c.toggleSidenav}">
+                                    <a aria-controls="flame-site-menu" aria-expanded="false" class="flame-topbar__menu-button flame-js-site-menu-button" data-gtm="mearch-button" href="#footer" onclick="return false;">
+                                        <span class="menu-text">Menu</span>
+                                        <img alt="" class="close-x" src="https://www.flame.edu.in/images/menu-mag.svg" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </aura:if>
+       </div>
+    <html tag="style">
+        main {
+        margin-top: 100px; /* Space for fixed header */
+        padding: 1rem;
+        }
+        
+        /* Header Styling */
+        .sticky-top {
+        position: fixed;
+        top: 0;
+        z-index: 1020; /* Keeps the header above other content */
+        width: 100%; /* Ensures header spans full width */
+        background-color: #f8f9fa; /* Light background */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for visibility */
+        }
+        
+        .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        border-bottom: 1px solid #dee2e6; /* Subtle bottom border */
+        }
+        
+        /* Logo Styling */
+        .flame-topbar__logo-img {
+        max-height: 50px; /* Adjust logo size */
+        width: auto; /* Maintain aspect ratio */
+        }
+        
+        /* Navigation Styling */
+        .nav a {
+        margin: 0 0.75rem;
+        text-decoration: none;
+        font-size: 1rem;
+        color: #041e39; /* Neutral gray */
+        transition: color 0.3s ease;
+        -webkit-transition: all 0.2s ease-out;
+        -moz-transition: all 0.2s ease-out;
+        -ms-transition: all 0.2s ease-out;
+        -o-transition: all 0.2s ease-out;
+        text-decoration: none;
+        font-family: sans-serif, arial;
+        font-weight: 100;
+        }
+        
+        .nav a:hover {
+        color: #495057; /* Slightly darker on hover */
+        }
+        
+        /* Disable Certain Links */
+        .nav a.link-opacity-25-hover {
+        color: #adb5bd; /* Light gray */
+        pointer-events: none; /* Disable link interaction */
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+        .header {
+        flex-direction: column;
+        align-items: flex-start;
+        }
+        
+        .nav {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        }
+        
+        .nav a {
+        margin: 0.25rem 0;
+        }
+        }
+    </html>   
+   <!-- menu header --> 
+    <!-- Sidebar -->
+    <div class="{!'ct-sidenav ' + (v.isOpen ? 'open' : '')}">
+        <button class="close" onclick="{!c.closeSidebar}">×</button>
+        <img alt="Logo" class="ct-sidenav-logo" src="{!$Resource.Flamelogo2}" />
+        
+        <ul class="ct-sidenav-list">
+            <li> <a href="javascript:void(0);" onclick="{!c.scrollToSection}" data-section="section1" style ="color: rgb(1 23 45);">Request Document Details</a></li>
+            <li> <a href="javascript:void(0);" onclick="{!c.scrollToSection}" data-section="section2" style ="color: rgb(1 23 45);">Request Document</a></li>
+            <li> <a href="javascript:void(0);" onclick="{!c.scrollToSection}" data-section="section3" style ="color: rgb(1 23 45);">Request Assistance</a></li>
+            <li> <a href="javascript:void(0);" onclick="{!c.scrollToSection}" data-section="section4" style ="color: rgb(1 23 45);">Section 4</a></li>
+            
+        </ul>
+        <div class="separator"></div>
+        
+        <div class="ct-footer-header">Join Us</div>
+        <ul class="ct-socials">
+            <li><img src="{!$Resource.Facebookicon}" alt="Facebook" /></li>
+            <li><img src="{!$Resource.Twittericons}" alt="Twitter" /></li>
+            <li><img src="{!$Resource.instagramicons}" alt="Instagram" /></li>
+            <li><img src="{!$Resource.youtubeicons}" alt="YouTube" /></li>
+            <li><img src="{!$Resource.Linkdinicons}" alt="LinkedIn" /></li>
+            <li><img src="{!$Resource.rsssquareicons}" alt="RSS" /></li>
+            <li>
+                <a href="/flame-social-wall" class="social-link" style="color: #FCB900;">All Social Media</a>
+            </li>
+        </ul>
+        
+        <div class="ct-footer-header">
+            <div class="columns1">
+                
+                
+                
+                <div class="footer-section">
+                    <div class="footeraddress-title">Technical Assistance:</div>
+                    <div class="footeraddress">
+                        <img src="{!$Resource.Emailicons}" alt="Email" />
+                        <div class="address">
+                            For technical assistance, please email<br />
+                            techsupport@flame.edu.in.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div></div>
+    
+    
+    <div class="overlay" onclick="{!c.closeSidebar}"></div>
+    
+    <!--- end -->
+    
+    <!-- sidemenu bar -->
+    <!-- Styles -->
+    <aura:html tag="style">
+        .ct-sidenav.open {
+        right: 0;
+        }
+        .ct-sidenav {
+        width: 343px;
+        height: 100%;
+        position: fixed;
+        z-index: 9990;
+        top: 0;
+        right: -343px; /* Matches the width */
+        background: #f0f0f0;
+        padding: 20px;
+        overflow-y: auto;
+        transition: right 0.25s ease-in-out;
+        color: #333;
+        opacity: 1 !important;
+        overflow:hidden;
+        }
+        
+        .ct-sidenav.open {
+        right: 0;
+        }
+        
+        .ct-sidenav .close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #FCB900;
+        cursor: pointer;
+        font-weight: bold;
+        }
+        
+        .ct-sidenav-logo {
+        max-width: 120px;
+        margin: 20px auto;
+        display: block;
+        }
+        
+        .ct-sidenav-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+        }
+        
+        .ct-sidenav-list > li {
+        margin: 10px 0;
+        }
+        
+        .ct-sidenav-list > li > a {
+        color: #000;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        transition: color 0.25s ease-in-out;
+        }
+        
+        .ct-sidenav-list > li > a:hover {
+        color: #FCB900;
+        }
+        
+        .separator {
+        width: 100%;
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.2);
+        margin: 20px 0;
+        }
+        
+        .ct-socials {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 20px 0;
+        justify-content: center;
+        }
+        
+        .ct-socials > li {
+        list-style: none;
+        }
+        
+        .ct-socials img {
+        width: 32px;
+        height: 32px;
+        }
+        
+        .ct-footer-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 20px 0 10px;
+        text-align: center;
+        }
+        
+        .columns1 {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        }
+        
+        .footer-section {
+        text-align: left;
+        }
+        
+        .footeraddress-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+        }
+        
+        .footeraddress {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        }
+        
+        .footeraddress img {
+        width: 24px;
+        height: 24px;
+        }
+        
+        .footeraddress .address {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #555;
+        }
+        
+        @media (max-width: 768px) {
+        .ct-sidenav {
+        width: 100%;
+        right: -100%;
+        }
+        
+        .ct-sidenav.open {
+        right: 0;
+        }
+        
+        .ct-sidenav-logo {
+        max-width: 100px;
+        }
+        
+        .ct-socials {
+        flex-direction: row;
+        }
+        
+        .columns {
+        flex-direction: column;
+        }
+        }
+    </aura:html>
+    
+  <!-- section-2 -->  
+    
+    <div id="section2" class="section" data-section="section2" style="{!v.showSection2 ? '' : 'display:none;'}">
+     <section id="about" class="about-flame-uni">
+            <div class="container">
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-lg-4 liberal-title">
+                        <h2>
+                            <span class="small-text">FLAME UNIVERSITY’S </span>
+                            <span class="big-text">LIBERAL <br/> EDUCATION</span>
+                        </h2>
+                    </div>
+                    <!-- Right Column -->
+                    <!-- Right Column -->
+                    <div class="col-lg-8 liberal-text">
+                        <p>
+                            Our educational philosophy is rooted in the concept of Liberal Education. We believe that the
+                            real world does not function in isolation, and neither should knowledge. By interconnecting
+                            social sciences, humanities, physical sciences, business, design, natural sciences, fine and
+                            performing arts, communications management, and computational sciences, we equip our students
+                            for an ever-changing new world. At FLAME, our students interact with various disciplines and are
+                            encouraged to address pressing world challenges through different perspectives. Our aim is to
+                            help them grow as critical thinkers and lifelong learners, as they lead purposeful lives, rather
+                            than just narrow professions. Therefore, we foster an environment that is personalized,
+                            participatory, and provides a transformational experience to aid in their personal and
+                            professional journeys.
+                        </p>
+                    </div>
+                    
+                </div>
+                
+          
+            
+            <div class="container" style ="background: #ffffff;color: #686e7c;">
+                <h2 class="fw-bold mb-4 display-6" style="color: #FCB900;">Vision of FLAME</h2>
+                
+                <div style="text-align:left;margin-left:100px;margin-right:100px; ">
+                    
+                    <div class="pricing">
+                        <div class="pricing-plan">
+                            <p>FLAME University exists to build an aspirational destination for students and faculty, to push the design and nature of studies and to create a societal upgradation phenomenon particularly in the fields of liberal education and leadership.</p>
+                            
+                        </div>
+                        <div class="pricing-plan">
+                            <p>FLAME will be amongst India’s most reputed and respected universities. We will be the university of choice for higher education in India. We will be recognized for the impact our teaching has on our students and the community at large. Further, we will be the leader in creating and disseminating knowledge in the disciplines we offer. With that, we will pioneer the advancement of knowledge in these disciplines.</p>
+                            
+                        </div>      
+                        <div class="pricing-plan">
+                            <p>FLAME is conceptualized with a desire to give something back to society. We believe in sharing of “Gyan” or knowledge since the ultimate goal for all human beings in the accumulation of knowledge. With that dictum, FLAME aims inculcate a habit of lifelong learning and inquiry amongst students, leading to the advancement of their well-being.</p>
+                            
+                        </div>
+                    </div></div>
+            </div></div>
+                </section></div>
+ <!-- section-2 end -->
+    <aura:html tag="style">
+        
+        .pricing {
+        display: flex;
+        justify-content: space-between;
+        max-width: 960px;
+        margin: auto;
+        
+        }
+        .pricing-plan {
+        flex: 1;
+        background-color: #041e39; !important;
+        margin: 15px 8px;
+        padding: 30px;
+        border-radius: 6px;
+        color: #fff;
+        --space: 20px;
+        }
+        
+        .pricing-plan p {
+        margin-top: 0;
+        }
+        .pricing-plan p span {
+        font-size: 33px;
+        }
+        
+        
+        
+        .liberal-title {
+        text-align: left;
+        flex: 0 0 43.333%; /* Ensures the heading occupies 1/3 of the row */
+        max-width: 43.333%;
+        padding-right: 30px; /* Adds more space between heading and paragraph */
+        }
+        
+        .liberal-title h2 {
+        color: #FCB900;
+        font-size: 50px; /* Increased font size for emphasis */
+        line-height: 1.6;
+        //margin-bottom: 30px;
+        position: relative;
+        }
+        
+        .liberal-title h2:before,
+        .liberal-title h2:after {
+        content: '';
+        display: block;
+        height: 4px; /* Thicker line for better visibility */
+        background: #FCB900;
+        position: absolute;
+        }
+        
+        .liberal-title h2:before {
+        width: 120px;
+        top: 0;
+        left: 0;
+        margin-left: -120px;
+        margin-top: 42px;
+        }
+        
+        .liberal-title h2:after {
+        width: 200%;
+        bottom: 24px;
+        left: 0;
+        margin-left: 320px;
+        }
+ 
+        .small-text {
+        display: block;
+        font-weight: bold;
+        font-size: 40px; 
+        text-align:left;
+        margin-left:20px;
+        text-transform: uppercase;
+        text-decoration: none;
+        letter-spacing: 0;
+        margin-top: 40px;
+        }
+        
+        .big-text {
+        display: block;
+        font-weight: bold;
+        margin-top: 10px;
+        font-size: 55px;
+        text-align:left;
+        margin-left:10px;
+        text-transform: uppercase;
+        text-decoration: none;
+        letter-spacing: 0;
+        margin-top: 40px;
+        }
+        
+        .liberal-text {
+        
+        //border: 1px solid black;
+        padding: 1px;
+        width: 800px;
+        text-align: justify;
+        margin-top:-270px;
+        margin-left:470px;
+        }
+        
+        .liberal-text p {
+        font-size: 17px; /* Increased font size for readability */
+        color: #ddd; /* Softer text color for readability */
+        line-height: 1.3; /* Decreased line height for more compact text */
+        text-align: justify;
+        } 
+        .headertitle{
+        border: 1px solid black;
+        margin-top:20px;
+        text-align: justify;
+        } 
+        
+        .rwd-table {
+        margin: auto;
+        min-width: 300px;
+        max-width: 100%;
+        border-collapse: collapse;
+        }
+        
+        .rwd-table tr:first-child {
+        border-top: none;
+        background: #041e39;
+        color: #fff;
+        }
+        
+        .rwd-table tr {
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        background-color: #f5f9fc;
+        }
+        
+        .rwd-table tr:nth-child(odd):not(:first-child) {
+        background-color: #ebf3f9;
+        }
+        
+        .rwd-table th {
+        display: none;
+        }
+        
+        .rwd-table td {
+        display: block;
+        }
+        
+        .rwd-table td:first-child {
+        margin-top: .5em;
+        }
+        
+        .rwd-table td:last-child {
+        margin-bottom: .5em;
+        }
+        
+        .rwd-table td:before {
+        content: attr(data-th) ": ";
+        font-weight: bold;
+        width: 120px;
+        display: inline-block;
+        color: #000;
+        }
+        
+        .rwd-table th,
+        .rwd-table td {
+        text-align: left;
+        }
+        
+        .rwd-table {
+        color: #333;
+        border-radius: .4em;
+        overflow: hidden;
+        }
+        
+        .rwd-table tr {
+        border-color: #bfbfbf;
+        }
+        
+        .rwd-table th,
+        .rwd-table td {
+        padding: .5em 1em;
+        }
+        @media screen and (max-width: 601px) {
+        .rwd-table tr:nth-child(2) {
+        border-top: none;
+        }
+        }
+        @media screen and (min-width: 600px) {
+        .rwd-table tr:hover:not(:first-child) {
+        background-color: #d8e7f3;
+        }
+        .rwd-table td:before {
+        display: none;
+        }
+        .rwd-table th,
+        .rwd-table td {
+        display: table-cell;
+        padding: .25em .5em;
+        }
+        .rwd-table th:first-child,
+        .rwd-table td:first-child {
+        padding-left: 0;
+        }
+        .rwd-table th:last-child,
+        .rwd-table td:last-child {
+        padding-right: 0;
+        }
+        .rwd-table th,
+        .rwd-table td {
+        padding: 1em !important;
+        }
+        }
+        
+        
+        /* THE END OF THE IMPORTANT STUFF */
+        
+        /* Basic Styling */
+        body {
+        background: #4B79A1;
+        background: -webkit-linear-gradient(to left, #4B79A1 , #283E51);
+        background: linear-gradient(to left, #4B79A1 , #283E51);        
+        }
+        h1 {
+        text-align: center;
+        font-size: 2.4em;
+        color: #f2f2f2;
+        }
+        .container {
+        display: block;
+        text-align: center;
+        }
+        h3 {
+        display: inline-block;
+        position: relative;
+        text-align: center;
+        font-size: 1.5em;
+        color: #cecece;
+        }
+        h3:before {
+        content: "\25C0";
+        position: absolute;
+        left: -50px;
+        -webkit-animation: leftRight 2s linear infinite;
+        animation: leftRight 2s linear infinite;
+        }
+        h3:after {
+        content: "\25b6";
+        position: absolute;
+        right: -50px;
+        -webkit-animation: leftRight 2s linear infinite reverse;
+        animation: leftRight 2s linear infinite reverse;
+        }
+        @-webkit-keyframes leftRight {
+        0%    { -webkit-transform: translateX(0)}
+        25%   { -webkit-transform: translateX(-10px)}
+        75%   { -webkit-transform: translateX(10px)}
+        100%  { -webkit-transform: translateX(0)}
+        }
+        @keyframes leftRight {
+        0%    { transform: translateX(0)}
+        25%   { transform: translateX(-10px)}
+        75%   { transform: translateX(10px)}
+        100%  { transform: translateX(0)}
+        }
+        .tablebutton {
+        text-decoration: none; 
+        color: #fff;
+        padding: 10px 20px;
+        text-align: center;
+        background: #FCB900;
+        border: 2px solid #FCB900;
+        border-radius: 5px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-size: 15px;
+        font-weight: bold;
+        }
+        
+        .tablebutton:hover {
+        background-color: #FCB900;
+        }
+        
+       
+        
+    </aura:html>
+   <!-- section-3 --> 
+    <div id="section3" class="section" data-section="section3" style="{!v.showSection3 ? '' : 'display:none;'}">
+   
+        <div class="section-flame-uni">
+            <h2 class="fw-bold mb-4 display-6" style="text-align:left;margin-left:120px;text-decoration: none;letter-spacing: 0;margin-top: 40px;">Registrar Connect </h2>
+            
+            <p class="smalldetailsubtitle">Welcome to the Registrar Connect site, your gateway to any assistance you may need from the Registrar’s office. Use the Request Document tab to request copies of official documents from the Registrar’s office, and use the Request Assistance tab for any other matters pertaining to the Registrar’s office.</p>
+          
+            <h2 class="fw-bold mb-4 display-6" style="text-align:left;margin-left:120px;text-decoration: none;letter-spacing: 0;margin-top: 40px;">Required Document Details</h2>
+            <div style="text-align:left;margin-left:120px;margin-right:100px; ">
+                 <div class="table-container"> 
+                <table class="rwd-table">
+                    <tbody>
+                        <tr>
+                            <th>Document Name</th>
+                            <th>First/Original Copy Fee(Rs.)</th>
+                            <th>Subsequent/Duplicate copy Fee(Rs.)</th>
+                            <th>Required Copies</th>
+                            <th>Action</th>
+                        </tr>
+                        <aura:iteration items="{!v.documentList}" var="obj">
+                            <tr>
+                                <td>{!obj.Name}</td> 
+                                <td>{!obj.FirstOriginalCopyFee__c}</td>
+                                <td>{!obj.SubsequentDuplicatecopyFee__c}</td>
+                                <td> {!obj.CopiesRequired__c}</td>
+                                <td><lightning:button variant="brand" label="Request Document" onclick="{!c.toggleSection}" class="btn btn-warning text-light fw-bold text-uppercase py-2 px-4" /></td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <span style="margin-down:30px;"></span>
+    </div>
+   
+   <!-- section-3 end --> 
+   
+    <aura:html tag="style">
+        
+        .table-container {
+        width: 100%; /* Full width */
+        height: 300px; /* Fixed height for the table */
+        overflow-y: auto; /* Enable vertical scrolling for large tables */
+        border: 1px solid #d3d3d3; /* Optional border for clarity */
+        border-radius: 8px; /* Match container's rounded corners */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        border-top: 4px solid #FCB900; /* Yellow border on top */
+        z-index: 1; /* Ensure visibility above other elements */
+        background: linear-gradient(to bottom, #f7fafc 0%, #d9e2ec 100%);
+        color: #091f37; /* Dark text color */
+        
+        }
+        .smalldetailsubtitle {
+        color: #000; /* Golden color for subtitle */
+        margin-left:130px;
+        margin-right:100px;
+        overflow: hidden;
+        padding:10px;
+        text-align: justify;
+        border: 0px solid black;
+        font-weight: bold;
+        }
+    </aura:html>
+    
+ 
+    
+    <aura:html tag="style">
+        /* Scroll Button */
+        .scroll-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        }
+        
+        .columns {
+        display: flex;
+        justify-content: space-between;
+        gap: 280px;
+        padding: 20px;
+        margin-left:130px;
+        margin-right:100px;
+        overflow: hidden;
+        }
+        .footer-section {
+        flex: 1;
+        }
+        .footeraddress-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        }
+        .footeraddress {
+        display: flex;
+        align-items: start;
+        gap: 8px;
+        }
+        .footeraddress img {
+        width: 20px;
+        height: 20px;
+        }
+        
+        
+        .footercontaner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        margin-top:100px;
+        border: 0px solid #ccc;
+        margin-left:130px;
+        margin-right:100px;
+        overflow: hidden;
+        }
+        
+        .social-icons {
+        display: flex;
+        gap: 10px; /* Space between icons */
+        align-items: center;
+        }
+        
+        .social-icons img {
+        width: 50px;
+        height: 50px;
+        }
+        
+        .social-link {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #fff;
+        text-decoration: none;
+        color: inherit;
+        }
+        .social-link:hover {
+        text-decoration: none; 
+        color: inherit; /* Keep the color the same on hover */
+        }
+        .footeraddress-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #FCB900;
+        }
+        
+        .footeraddress {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #fff;
+        }
+        
+        
+        
+        .col {
+        -ms-flex-preferred-size: 0;
+        flex-basis: 0;
+        -webkit-box-flex: 1;
+        -ms-flex-positive: 1;
+        flex-grow: 1;
+        max-width: 100%;
+        }
+        .footer-bottom {
+        background: #FCB900;
+        //height: 40px;
+        line-height: normal;
+        color: #fff;
+        padding: 15px 0;
+        font-size: 11px;
+        margin-top: 100px;
+        }
+        
+        .container4 {
+        position: relative; /* Parent container for positioning pseudo-elements */
+        text-align: left;
+        margin: 0 auto; /* Center the container */
+        max-width: 900px; /* Define a max width for the form */
+        padding: 30px;
+        background: #fff;
+        margin-top: -200px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        border-radius: 10px; /* Rounded corners */
+        border: none; /* Remove default borders */
+        border-top: 5px solid #fed330;
+        }
+        
+        /* Left Border: Top 50% Yellow, Bottom 50% Hidden */
+        .container4::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 34%; /* Only top 50% */
+        width: 5px; /* Border thickness */
+        background-color: #fed330; /* Yellow color */
+        }
+        
+        /* Right Border: Top 50% Yellow, Bottom 50% Hidden */
+        .container4::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 34%; /* Only top 50% */
+        width: 5px; /* Border thickness */
+        background-color: #fed330; /* Yellow color */
+        }
+        
+        h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+        }
+        
+        
+        .contact-form .form-floating .form-control {
+        border-radius: 8px; /* Smooth input corners */
+        border: 1px solid #ccc;
+        }
+        
+        .contact-form .form-floating .form-control:focus {
+        border-color: #fed330;
+        box-shadow: 0 0 5px rgba(254, 211, 48, 0.5);
+        }
+        
+        .contact-form .btn {
+        background-color: #fed330;
+        color: #333;
+        border: none;
+        transition: all 0.3s ease-in-out;
+        }
+        
+        .contact-form .btn:hover {
+        background-color: #041e39;;
+        color: #fff;
+        
+        }
+        
+        .contact-form .form-floating label {
+        color: #666;
+        }
+        
+        .row {
+        margin-bottom: 15px;
+        }  
+        }         
+    </aura:html>
+        <!-- section-6 -->
+    <div id="section6" class="section6" data-section="section6" style="{!v.showSection6 ? '' : 'display:none;'}">
+        <!-- second header -->  
+        
+        <div class="progress-line bg-warning py-1 w-100 position-fixed top-0"></div>  
+        <header class="sticky-top bg-light" id="header" >
+            <div class="header border-bottom border-secondary-subtle py-2">
+                <div class="container" >
+                    <div class="row">
+                        <div class="col-md-12 d-flex align-items-center justify-content-between">
+                            <img alt="FLAME University" class="flame-topbar__logo-img" id="top_mark" src="https://www.flame.edu.in/images/FLAME-Logo.png" />
+                            <div class="nav">
+                                <nav >
+                                    <a href="#section5" class="link-opacity-50-hover" >Home</a>
+                                    <a href="#section1" class="link-opacity-50-hover">Request Document Details</a>
+                                    <a href="#section2" class="link-opacity-50-hover">Request Document</a>
+                                    <a href="#section3" class="link-opacity-50-hover">Request Assistance</a>
+                                    <a href="#section4" class="link-opacity-25-hover">Section 4</a>
+                                </nav>
+                            </div>
+                            <div class="flame-topbar__menu-button" onclick="{!c.toggleSidenav}">
+                                <a aria-controls="flame-site-menu" aria-expanded="false" class="flame-topbar__menu-button flame-js-site-menu-button" data-gtm="mearch-button" href="#footer" onclick="return false;">
+                                    <span class="menu-text">Menu</span>
+                                    <img alt="" class="close-x" src="https://www.flame.edu.in/images/menu-mag.svg" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+         <div class="slds">
+        <section id="about" class="about section-padding">
+            <div class="container">
+                <div class="row gx-5">
+                    <div class="col-md-12">
+                        <div class="about-content">
+                            <h2 class="fw-bold mb-4 display-6" style="text-align:left;margin-left:10px;text-decoration: none;letter-spacing: 0;margin-top: 40px;">Request Document </h2>
+                          
+                            
+                  
+            <aura:if isTrue="{!!empty(v.message)}">
+                <div class="slds-notify_container slds-is-relative">
+                    <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.messageType }" role="alert">
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small">{!v.message}</h2>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+           
+                            <table class="rwd-table">
+                                <tbody>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Document Name</th>
+                                        <th>First/Original Copy Fee(Rs.)</th>
+                                        <th>Subsequent/Duplicate copy Fee(Rs.)</th>
+                                        <th>Number of Copies</th>
+                                        <th>Add More</th>
+                                    </tr>
+                                    
+                                    <aura:iteration items="{!v.dynamicRowsList}" var="eachRow" indexVar="index">
+                                        <tr>
+                                            <th scope="row">{! index + 1 }</th>
+                                            <td title="Document Name">
+                                                <lightning:select name="accName" value="{!eachRow.Name}"  
+                                                                  required="true" class="nameInput"   
+                                                                  aura:id="searchField" >
+                                                     <option value="">-- Select --</option>
+                                                    <aura:iteration items="{!v.picklistOptions}" var="option">
+                                                        <option value="{!option.value}">{!option.label}</option>
+                                                    </aura:iteration>
+
+                                                </lightning:select>
+                                            </td>
+                                 
+                                            <td title="First/Original Copy Fee(Rs.)">
+                                                <lightning:select name="OriginalCopyFee" value="{!eachRow.OriginalCopyFee}"   class="OriginalCopyFeeInput"   
+                                                                  aura:id="OriginalCopyFeeId">
+                                                    <option value="">-- Select --</option>
+                                                    <aura:iteration items="{!v.picklistOptions1}" var="option">
+                                                        <option value="{!option.value}">{!option.label}</option>
+                                                    </aura:iteration>
+                                                    
+                                                </lightning:select>
+                                            </td> 
+                                            
+                                            <td title="Subsequent/Duplicate copy Fee(Rs.)">
+                                                <lightning:select name="DuplicatecopyFee" value="{!eachRow.DuplicatecopyFee}"   
+                                                                  class="DuplicatecopyFeeInput"   
+                                                                  aura:id="DuplicatecopyFee">
+                                                    <option value="">-- Select --</option>
+                                                    <aura:iteration items="{!v.picklistOptions2}" var="option">
+                                                        <option value="{!option.value}">{!option.label}</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                            </td>
+
+                                            <td title="Number of Copies">
+                                                <lightning:input aura:id="dynamicRowsForm" 
+                                                                 required="true" 
+                                                                 maxlength="50" 
+                                                                 name="accNumber" 
+                                                                 value="{!eachRow.Numberofcopies}" />
+                                            </td>
+                                            
+                                            <td class="slds-p-around_xx-small">
+                                                
+                                               <!-- <lightning:button name="{! eachRow.rowNumber }" variant="brand" class="cloneClass" label="Clone" onclick="{!c.cloneRow}" /> -->
+                                                <aura:if isTrue="{! eachRow.rowNumber == 1 }">
+                                                    <lightning:buttonIcon alternativeText="Add row" variant="container" class="successClass" iconName="utility:add" onclick="{!c.addRow}" />
+                                                </aura:if>
+                                                <aura:if isTrue="{! eachRow.rowNumber > 1 }">
+                                                    <lightning:buttonIcon name="{! eachRow.rowNumber }" alternativeText="Delete row" variant="container" class="errorClass" iconName="utility:close" onclick="{!c.deleteRow}" />
+                        
+                                                </aura:if>
+                                            </td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+             
+                        </div>
+                    </div>
+                    <span style="margin-down:30px;"></span>
+                </div>
+            </div> 
+       
+            <div class="container">
+                <div class="row gx-5">
+                    <div class="col-md-12">
+                        <div class="about-content">
+                    <h2 class="fw-bold mb-4 display-6" style="text-align:left;margin-left:10px;text-decoration: none;letter-spacing: 0;margin-top: 40px;">Attachments</h2>
+                    
+                    <!-- Button to Add a new Row -->
+                    <div class="slds-float_right slds-p-bottom_small">
+                        <lightning:button label="Add Row" variant="brand" onclick="{!c.addRow2}" />
+                    </div>
+                    
+                    <table class="rwd-table">
+                         <tbody>
+                            <tr>
+                                <th>S.No</th>
+                                <th>File Uploader</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        
+                      
+                            <aura:iteration items="{!v.rows}" var="row" indexVar="index">
+                                <tr>
+                                    <td>{!index + 1}</td>
+                                    <td>
+                                        <!-- File Uploader -->
+                                        <lightning:input aura:id="fuploader" type="file" name="{!index}"  multiple="true"
+                                                         onchange="{!c.handleFilesChange}" />
+                                        <div class="slds-text-body_small slds-text-color_error">{!row.fileName}</div>
+                                    </td>
+                                    <td>
+                                        <lightning:textarea aura:id="description" name="description"  value="{!row.description}" 
+                                                            onchange="{!c.updateDescription}" />
+                                    </td>
+                                    <td>
+                                        <lightning:buttonIcon iconName="utility:delete" size="large" variant="bare" alternativeText="Remove"
+                                                              onclick="{!c.removeRow}" name="{!index}" />
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+            
+            <lightning:button variant="brand" label="Submit" onclick="{!c.submitDocument}" class="btn btn-warning text-light fw-bold text-uppercase py-2 px-4" />
+        </section>
+    </div>
+    
+    </div>
+
+    <html tag="style">
+        #section6 {
+        min-height: auto;
+        position: relative;
+        text-align: center;
+        font-family: sans-serif, arial;
+        margin: 0;
+        background-color: #ffffff;
+        color: #686e7c;
+        border: 5px solid #FCB900;
+        }
+    </html>
+    <aura:attribute name="showPopup" type="Boolean" default="false"/>
+    
+    <!-- Modal Popup -->
+    <aura:if isTrue="{!v.showPopup}">
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick="{!c.closePopup}" title="Close">
+                        <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button__icon slds-button__icon_large"/>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium">
+                    
+                        <p>your request has been submitted successfully</p>
+                 </div>
+
+                <footer class="slds-modal__footer">
+                <lightning:button variant="success" label="Finish" onclick="{!c.closePopup}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    
+    
+    
+    
+   <!-- section-5  end --> 
+    <!-- section-4 -->
+    <div id="section4" class="section" data-section="section4" style="{!v.showSection4 ? '' : 'display:none;'}">
+    
+        <div class="container4">
+            <h2 class="fw-bold mb-4 display-6">Request Assistance</h2>
+            <form class="contact-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" placeholder="First Name" />
+                            <label for="fname">First Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lname" placeholder="Last Name" />
+                            <label for="lname">Last Name</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="Email" />
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="phone" placeholder="Phone" />
+                            <label for="phone">Phone</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="year" placeholder="Passing Year" />
+                            <label for="year">Passing Year</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="number" placeholder="Student Number" />
+                            <label for="number">Student Number</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Message" id="message" style="height: 120px"></textarea>
+                    <label for="message">Message</label>
+                </div>
+                
+                <button type="submit" class="btn btn-warning text-uppercase fw-bold py-2 px-4 w-100">
+                    Submit
+                </button>
+            </form>
+        </div>
+        
+        
+        
+       
+        <div class="footercontaner">
+            <img src="https://www.flame.edu.in/images/footer/white-Logo-FLAME.png" alt="FLAME Logo"/>
+            
+            <div class="social-icons"> 
+                <img src="{!$Resource.Facebookicon}" alt="Facebook"  /> 
+                <img src="{!$Resource.Twittericons}" alt="Twitter" />
+                <img src="{!$Resource.instagramicons}" alt="Instagram" />
+                <img src="{!$Resource.youtubeicons}" alt="YouTube" />
+                <img src="{!$Resource.Linkdinicons}" alt="LinkedIn" />
+                <img src="{!$Resource.rsssquareicons}" alt="RSS" /> 
+                <a href="/flame-social-wall" class="social-link" style="color: #FCB900;">All Social Media</a>
+            </div>
+        </div>
+        
+        <div class="columns">
+            <div class="footer-section">
+                <div class="footeraddress-title">Campus Address:</div>
+                <div class="footeraddress">
+                    <img src="{!$Resource.Bankicons}" alt="FLAME University" />
+                    <div>
+                        FLAME University<br />
+                        Gat No. 1270, Lavale,<br />
+                        Off. Pune Bangalore Highway,<br />
+                        Pune – 412115,<br />
+                        Maharashtra, India.
+                    </div>
+                </div>
+            </div>
+            <div class="footer-section">
+                <div class="footeraddress-title">Mailing Address:</div>
+                <div class="footeraddress">
+                    <img src="{!$Resource.Maillingicons}" alt="FLAME University" />
+                    <div>
+                        401, Phoenix Complex,<br />
+                        Bund Garden Road,<br />
+                        Opp. Residency Club,<br />
+                        Pune – 411001,<br />
+                        Maharashtra, India.
+                    </div>
+                </div>
+            </div>
+            <div class="footer-section">
+                <div class="footeraddress-title">Technical Assistance:</div>
+                <div class="footeraddress">
+                    <img src="{!$Resource.Emailicons}" alt="Email" />
+                    <div>
+                        For technical assistance, please email<br />
+                        techsupport@flame.edu.in.
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+        <!-- Scroll to Top Button -->
+        <button class="scroll-button" onclick="{!c.scrollToFirstSection}">
+            <img src="{!$Resource.Toparrowicons }" alt="Arrow" />
+        </button>
+        
+        <!-- Footer Bottom Section -->
+        <section class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        Copyright 2024. All rights reserved. FLAME University
+                    </div>
+                </div>
+            </div>
+        </section> 
+        </div>
+   <!-- section-4 end  -->
+<!-- add new footr section-5 end  -->
+ <div id="section5" class="section5" data-section="section5" style="{!v.showSection5 ? '' : 'display:none;'}">
+      <div class="footercontaner" >
+            <img src="https://www.flame.edu.in/images/footer/white-Logo-FLAME.png" alt="FLAME Logo"/>
+            
+            <div class="social-icons"> 
+                <img src="{!$Resource.Facebookicon}" alt="Facebook"  /> 
+                <img src="{!$Resource.Twittericons}" alt="Twitter" />
+                <img src="{!$Resource.instagramicons}" alt="Instagram" />
+                <img src="{!$Resource.youtubeicons}" alt="YouTube" />
+                <img src="{!$Resource.Linkdinicons}" alt="LinkedIn" />
+                <img src="{!$Resource.rsssquareicons}" alt="RSS" /> 
+                <a href="/flame-social-wall" class="social-link" style="color: #FCB900;">All Social Media</a>
+            </div>
+        </div>
+        
+        <div class="columns">
+            <div class="footer-section">
+                <div class="footeraddress-title">Campus Address:</div>
+                <div class="footeraddress">
+                    <img src="{!$Resource.Bankicons}" alt="FLAME University" />
+                    <div>
+                        FLAME University<br />
+                        Gat No. 1270, Lavale,<br />
+                        Off. Pune Bangalore Highway,<br />
+                        Pune – 412115,<br />
+                        Maharashtra, India.
+                    </div>
+                </div>
+            </div>
+            <div class="footer-section">
+                <div class="footeraddress-title">Mailing Address:</div>
+                <div class="footeraddress">
+                    <img src="{!$Resource.Maillingicons}" alt="FLAME University" />
+                    <div>
+                        401, Phoenix Complex,<br />
+                        Bund Garden Road,<br />
+                        Opp. Residency Club,<br />
+                        Pune – 411001,<br />
+                        Maharashtra, India.
+                    </div>
+                </div>
+            </div>
+            <div class="footer-section">
+                <div class="footeraddress-title">Technical Assistance:</div>
+                <div class="footeraddress">
+                    <img src="{!$Resource.Emailicons}" alt="Email" />
+                    <div>
+                        For technical assistance, please email<br />
+                        techsupport@flame.edu.in.
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+        <!-- Scroll to Top Button -->
+        <button class="scroll-button" onclick="{!c.scrollToFirstSection}">
+            <img src="{!$Resource.Toparrowicons }" alt="Arrow" />
+        </button>
+        
+        <!-- Footer Bottom Section -->
+        <section class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        Copyright 2024. All rights reserved. FLAME University
+                    </div>
+                </div>
+            </div>
+        </section> 
+     
+     
+</div>
+   <html tag="style">
+        .section5 {
+        min-height: 400px;
+        position: relative;
+        text-align: center;
+        font-family: sans-serif, arial;
+        margin: 0;
+        
+        }
+    </html>
+
+    
+</aura:component>
+({
+    doInit: function(component, event, helper) {
+        
+        window.addEventListener('scroll', $A.getCallback(function() {
+            helper.toggleNavOnScroll(component);
+        }));
+        helper.addRowHelper(component, 1);
+        
+
+        // First picklist
+        var action = component.get("c.getselectedtermId");
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.picklistOptions", response.getReturnValue());
+                
+            } else {
+                console.error("Error fetching picklist options for the first picklist");
+            }
+        });
+        $A.enqueueAction(action);
+        
+        var action3 = component.get("c.getselectedtermId1");
+        action3.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.picklistOptions1", response.getReturnValue());
+                
+            } else {
+                console.error("Error fetching picklist options for the first picklist");
+            }
+        });
+        $A.enqueueAction(action3);
+        
+        
+        
+        
+        
+        // Three picklist
+        var action2 = component.get("c.getselectedtermId2");
+        action2.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.picklistOptions2", response.getReturnValue());
+                
+            } else {
+                console.error("Error fetching picklist options for the first picklist");
+            }
+        });
+        $A.enqueueAction(action2);
+    },
+    
+    scrollToSection: function(component, event, helper) {
+        var sectionId = event.currentTarget.getAttribute("data-section");
+        var section = document.getElementById(sectionId);
+        
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+    },
+    
+    // Other controller methods...
+    
+    onDestroy: function(component, event, helper) {
+        // Remove scroll event listener on component destruction
+        window.removeEventListener("scroll", $A.getCallback(function() {
+            helper.handleScroll(component);
+        }));
+    },
+    
+    
+    
+    toggleSidenav : function(component, event, helper) {
+        let isOpen = component.get("v.isOpen");
+        component.set("v.isOpen", !isOpen);
+    },
+    scrollToFirstSection: function(component, event, helper) {
+        document.getElementById('section1').scrollIntoView({ behavior: 'smooth' });
+    },
+    scrollToSection: function(component, event, helper) {
+        const sectionId = event.currentTarget.getAttribute("data-section");
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: "smooth" });
+        }
+    },
+    
+    handleScroll: function(component, event, helper) {
+        // Sections to track
+        const sections = ["section1", "section2", "section3", "section4"];
+        let currentSection = "";
+        
+        // Check which section is currently in view
+        sections.forEach((sectionId) => {
+            const section = document.getElementById(sectionId);
+            const rect = section.getBoundingClientRect();
+            
+            if (rect.top <= 100 && rect.bottom >= 100) {
+            currentSection = sectionId;
+        }
+                         });
+        
+        // Update fixedHeader based on current section in view
+        component.set("v.fixedHeader", currentSection);
+    },
+    closeSidebar:function(component, event, helper) {
+        component.set("v.isOpen", false);
+    },
+    //mail table    
+    fetchRecords: function(component, event, helper) {
+        var action = component.get("c.fetchMetadataRecords");
+        
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log("Response State: ", state); // Debug log for state
+            if (state === "SUCCESS") {
+                alert("Fetched Records: ", response.getReturnValue()); // Debug log for data
+                component.set("v.documentList", response.getReturnValue());
+            } else if (state === "ERROR") {
+                var errors = response.getError();
+                console.error("Errors: ", errors); // Debug log for errors
+            }
+        });
+        
+        $A.enqueueAction(action);
+    },
+    //maintable toggle button 
+    toggleSection: function (component, event, helper) {
+        // Get the current value of the attribute
+        var currentValue = component.get("v.showSection5");
+        
+        // Toggle the value (true -> false, false -> true)
+        component.set("v.showSection5", !currentValue);
+    },
+    
+    //table-2
+    addRow2: function (component, event, helper) {
+        helper.addRow2(component);
+    },
+    removeRow: function (component, event, helper) {
+        const index = parseInt(event.getSource().get("v.name"), 10); // Safely parse the index
+        helper.removeRow(component, index);
+    },
+    handleFilesChange: function (component, event) {
+        const index = parseInt(event.getSource().get("v.name"), 10); // Safely parse the index
+        const fileInput = event.getSource().get("v.files")[0];
+        if (fileInput) {
+            const rows = component.get("v.rows");
+            if (rows[index]) { // Ensure index is valid
+                rows[index].fileName = fileInput.name;
+                component.set("v.rows", rows);
+            }
+        }
+    },
+    updateDescription: function (component, event) {
+        const index = parseInt(event.getSource().get("v.name"), 10); // Safely parse the index
+        const rows = component.get("v.rows");
+        if (rows[index]) { // Ensure index is valid
+            rows[index].description = event.getSource().get("v.value");
+            component.set("v.rows", rows);
+        }
+    },
+    
+    //table-1
+    addRow : function(component, event, helper) {
+        var loopVar = 1;
+        if(event.getSource().get('v.name') === 'multipleRows' && !$A.util.isEmpty('v.numberOfRows') ) {
+            loopVar = component.get('v.numberOfRows') > 10 ? 0 : component.get('v.numberOfRows'); 
+        }
+        helper.addRowHelper(component, loopVar);
+    },
+    
+   
+    
+    deleteRow : function(component, event, helper) {
+        var dynamicRowsList = component.get("v.dynamicRowsList");
+        var index = dynamicRowsList.findIndex(x => x.rowNumber === event.getSource().get('v.name'))
+        if(index != -1)
+            dynamicRowsList.splice(index, 1);
+        component.set("v.dynamicRowsList", dynamicRowsList);
+    },
+    
+    
+   
+    saveRecords : function(component, event, helper) {
+        var validExpense = component.find('dynamiRowsForm').reduce(function ( validSoFar, inputCmp ) {
+            inputCmp.showHelpMessageIfInvalid();
+            return validSoFar && inputCmp.get('v.validity').valid;
+        }, true);
+        if(validExpense){
+            helper.saveRecordsHelper(component, event, helper);
+        }	
+    },
+    //submit button
+    submitDocument: function (component, event, helper) {
+       helper.uploadHelper(component, event);
+        
+    },
+ 
+    // Close the popup
+    closePopup: function (component, event, helper) {
+        component.set("v.showPopup", false);
+        window.location.reload();
+    },
+
+   
+})
+
+({
+    handleScroll: function(component) {
+        let lastScrollTop = component.get("v.lastScrollTop") || 0;
+        let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (currentScrollTop < lastScrollTop) {
+            // Scrolling up: show the banner
+            component.set("v.bannerClass", "banner fixed-banner");
+        } else {
+            // Scrolling down: hide the banner
+            component.set("v.bannerClass", "banner fixed-banner banner-hidden");
+        }
+        
+        // Update last scroll position
+        component.set("v.lastScrollTop", currentScrollTop <= 0 ? 0 : currentScrollTop);
+    },
+    toggleNavOnScroll: function(component) {
+        var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+        
+        if (scrollPosition > 500) { // Adjust threshold as needed
+            component.set("v.isBannerVisible", true);
+        } else {
+            component.set("v.isBannerVisible", false);
+        }
+    },
+   
+    
+  
+    addRowHelper : function(component, noOfRows) {
+        for(var index = 0; index < noOfRows; index++) {
+            var dynamicRowsList = component.get("v.dynamicRowsList");
+            dynamicRowsList.push({
+                'rowNumber':dynamicRowsList.length + 1,
+                'Name': '',
+                'OriginalCopyFee': '',
+                'DuplicatecopyFee': '',
+                'Numberofcopies': ''
+                
+            });
+            component.set("v.dynamicRowsList", dynamicRowsList);
+        }
+    },
+   
+   
+    addAccountRecord: function(component, event) {
+        //get the account List from component  
+        var accountList = component.get("v.accountList");
+        
+        component.set("v.accountList", accountList);
+    },
+    addRow2: function (component) {
+        const rows = component.get("v.rows");
+        const maxRows = component.get("v.maxRows");
+        if (rows.length < maxRows) {
+            rows.push({ fileName: '', description: '' });
+            component.set("v.rows", rows);
+            component.set("v.errorMessage", ""); // Clear error message
+        } else {
+            component.set("v.errorMessage", `You cannot add more than ${maxRows} rows.`);
+        }
+    },
+    removeRow: function (component, index) {
+        const rows = component.get("v.rows");
+        if (rows.length > 1) {
+            if (index >= 0 && index < rows.length) { // Validate index before removing
+                rows.splice(index, 1);
+                component.set("v.rows", rows);
+                component.set("v.errorMessage", ""); // Clear error message if any
+            } else {
+                component.set("v.errorMessage", "Invalid row index for deletion.");
+            }
+        } else {
+            component.set("v.errorMessage", "At least one row is required.");
+        }
+    },
+    
+uploadHelper: function (component, event) {
+    var dynamicRowsList = JSON.stringify(component.get("v.dynamicRowsList"));
+    var uploadjsondetails = JSON.stringify(component.get("v.rows"));
+
+    // Get the selected files using aura:id
+    var fileInput = component.find("fuploader").get("v.files");
+    if (!fileInput || fileInput.length === 0) {
+        alert("No file selected.");
+        return;
+    }
+
+    var file = fileInput[0];
+
+    // Check the file size
+    if (file.size > this.MAX_FILE_SIZE) {
+        alert(`File size cannot exceed ${this.MAX_FILE_SIZE} bytes.\nSelected file size: ${file.size}`);
+        return;
+    }
+
+    // Create a FileReader object
+    var objFileReader = new FileReader();
+
+    // Set onload function for FileReader
+    objFileReader.onload = $A.getCallback(function () {
+        var fileContents = objFileReader.result;
+        var base64Marker = "base64,";
+        var dataStart = fileContents.indexOf(base64Marker) + base64Marker.length;
+        fileContents = fileContents.substring(dataStart);
+
+        // Directly set the action to call the Apex method
+        var action = component.get("c.SaveFile");
+
+        // Set parameters for the Apex method
+        action.setParams({
+            fileName: file.name,
+            base64Data: fileContents, // Do NOT encode this string
+            contentType: file.type,
+            dynamicRowsList: dynamicRowsList,
+            rows: uploadjsondetails
+        });
+
+        // Set callback for the server action
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                alert("File uploaded successfully.");
+                component.set("v.showPopup", true);
+            } else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors && errors[0] && errors[0].message) {
+                    console.error("Error: " + errors[0].message);
+                    alert("Error: " + errors[0].message);
+                } else {
+                    console.error("Unknown error occurred.");
+                    alert("An unknown error occurred.");
+                }
+            } else if (state === "INCOMPLETE") {
+                console.error("Incomplete response from the server.");
+                alert("Incomplete response from the server.");
+            }
+        });
+
+        // Enqueue the action
+        $A.enqueueAction(action);
+    });
+
+    objFileReader.readAsDataURL(file);
+}
+
+
+})
+
+<aura:application extends="force:slds" >
+    <c:LwcRegisterTemplatecomponent/>
+</aura:application>
+
+public class LwcRegistertemplateController {
+@AuraEnabled
+public static List<Registrar_Document_List__c> fetchMetadataRecords() {
+    List<Registrar_Document_List__c> records = [
+        SELECT Name, CopiesRequired__c, FirstOriginalCopyFee__c, SubsequentDuplicatecopyFee__c, Profile__c 
+        FROM Registrar_Document_List__c
+    ];
+    System.debug('Fetched Records: ' + records);
+    return records;
+}
+     // Inner class for select options
+    public class CustomSelectOption {
+        @AuraEnabled
+        public String label { get; set; }
+        
+        @AuraEnabled
+        public String value { get; set; }
+        
+        public CustomSelectOption(String label, String value) {
+            this.label = label;
+            this.value = value;
+        }
+    }
+    
+    // Method to fetch term options
+    @AuraEnabled
+    public static List<CustomSelectOption> getselectedtermId() {
+        List<CustomSelectOption> options = new List<CustomSelectOption>();
+        options.add(new CustomSelectOption('', '-- Select --')); 
+        Set<String> nameIds = new Set<String>();  
+        
+        for (Registrar_Document_List__c ay : [
+            SELECT Name, CopiesRequired__c, FirstOriginalCopyFee__c, SubsequentDuplicatecopyFee__c, Profile__c 
+           FROM Registrar_Document_List__c 
+            WHERE Name!= null 
+            LIMIT 2000
+        ]) {
+            String NameId = ay.Name; 
+            String Name = ay.Name;
+            
+            if (!nameIds.contains(NameId)) {
+                options.add(new CustomSelectOption(Name, NameId));
+                nameIds.add(Name); 
+            }
+        }
+        
+        return options;
+    }
+     @AuraEnabled
+    public static List<CustomSelectOption> getselectedtermId1() {
+        List<CustomSelectOption> options1 = new List<CustomSelectOption>();
+        options1.add(new CustomSelectOption('', '-- Select --')); 
+        Set<String> nameIds = new Set<String>();  
+        
+        for (Registrar_Document_List__c ay : [
+            SELECT Name, CopiesRequired__c, FirstOriginalCopyFee__c, SubsequentDuplicatecopyFee__c, Profile__c 
+           FROM Registrar_Document_List__c 
+            WHERE Name!= null 
+            LIMIT 2000
+        ]) {
+            String NameId = String.valueOf(ay.FirstOriginalCopyFee__c); 
+            String FirstOriginalCopyFee = String.valueOf(ay.FirstOriginalCopyFee__c);
+            
+            if (!nameIds.contains(NameId)) {
+                options1.add(new CustomSelectOption(FirstOriginalCopyFee, NameId));
+                nameIds.add(FirstOriginalCopyFee); 
+            }
+        }
+        
+        return options1;
+    }
+    @AuraEnabled
+    public static List<CustomSelectOption> getselectedtermId2() {
+        List<CustomSelectOption> options = new List<CustomSelectOption>();
+        options.add(new CustomSelectOption('', '-- Select --')); 
+        Set<String> nameIds = new Set<String>();  
+        
+        for (Registrar_Document_List__c ay : [
+            SELECT Name, CopiesRequired__c, FirstOriginalCopyFee__c, SubsequentDuplicatecopyFee__c, Profile__c 
+           FROM Registrar_Document_List__c 
+            WHERE Name!= null 
+            LIMIT 2000
+        ]) {
+            String NameId = String.valueOf(ay.SubsequentDuplicatecopyFee__c); 
+            String SubsequentDuplicatecopyFee = String.valueOf(ay.SubsequentDuplicatecopyFee__c);
+            
+            if (!nameIds.contains(NameId)) {
+                options.add(new CustomSelectOption(SubsequentDuplicatecopyFee, NameId));
+                nameIds.add(SubsequentDuplicatecopyFee); 
+            }
+        }
+        
+        return options;
+    }
+  
+@AuraEnabled
+public static Id SaveFile(
+    String fileName, 
+    String base64Data, 
+    String contentType, 
+    String dynamicRowsList, 
+    String rows
+) {
+    // Debug the incoming parameters
+    System.debug('Dynamic Rows List: ' + dynamicRowsList);
+    System.debug('Rows: ' + rows);
+
+    // Parse the JSON strings into objects
+    List<Object> parsedDynamicRowsList = new List<Object>();
+    List<Object> parsedRows = new List<Object>();
+
+    if (!String.isBlank(dynamicRowsList)) {
+        parsedDynamicRowsList = (List<Object>) JSON.deserializeUntyped(dynamicRowsList);
+    }
+    if (!String.isBlank(rows)) {
+        parsedRows = (List<Object>) JSON.deserializeUntyped(rows);
+    }
+
+    System.debug('Parsed Dynamic Rows List: ' + parsedDynamicRowsList);
+    System.debug('Parsed Rows: ' + parsedRows);
+
+    // Convert the dynamic rows list to a formatted string with labels and values
+    String dynamicRowsDescription = '';
+    if (!parsedDynamicRowsList.isEmpty()) {
+        for (Object item : parsedDynamicRowsList) {
+            if (item instanceof Map<String, Object>) {
+                Map<String, Object> itemMap = (Map<String, Object>) item;
+                for (String key : itemMap.keySet()) {
+                    dynamicRowsDescription += key + ': ' + String.valueOf(itemMap.get(key)) + '\n';
+                }
+            } else {
+                dynamicRowsDescription += String.valueOf(item) + '\n';
+            }
+        }
+    }
+
+    System.debug('Dynamic Rows Description: ' + dynamicRowsDescription);
+
+    List<Registrar_Document_List__c> inputList = new List<Registrar_Document_List__c>();
+    if (!String.isBlank(rows)) {
+        try {
+            inputList = (List<Registrar_Document_List__c>) JSON.deserialize(rows, List<Registrar_Document_List__c>.class);
+        } catch (Exception e) {
+            throw new AuraHandledException('Error deserializing rows: ' + e.getMessage());
+        }
+    }
+
+    System.debug('Input List: ' + inputList);
+
+    if (!inputList.isEmpty()) {
+        try {
+            // Fetch the Record Type
+            RecordType rT = [
+                SELECT Id 
+                FROM RecordType 
+                WHERE Name = 'Academic Services' 
+                LIMIT 1
+            ];
+
+            // Create the Case record
+            Case caseObj = new Case();
+            caseObj.RecordTypeId = rT.Id;
+            caseObj.Status = 'New';
+            caseObj.Origin = 'Community Portal';
+            caseObj.Subject = 'Document Request';
+            caseObj.HLP_Assist_Type__c = 'Academic Services';
+            caseObj.HLP_Category__c = 'Document Related';
+            caseObj.HLP_Sub_Category__c = 'Document Request';
+            caseObj.Description = 'Document Request\n' + dynamicRowsDescription;
+
+            insert caseObj;
+            System.debug('Case created with Id: ' + caseObj.Id);
+
+            // Create attachments for each parsed row
+            List<Attachment> attachments = new List<Attachment>();
+            for (Object row : parsedRows) {
+                if (row instanceof Map<String, Object>) {
+                    Map<String, Object> rowMap = (Map<String, Object>) row;
+
+                    // Extract file-specific data
+                    String attachmentFileName = rowMap.containsKey('FileName') ? String.valueOf(rowMap.get('FileName')) : fileName;
+                    String attachmentBase64Data = rowMap.containsKey('Base64Data') ? String.valueOf(rowMap.get('Base64Data')) : base64Data;
+                    String attachmentContentType = rowMap.containsKey('ContentType') ? String.valueOf(rowMap.get('ContentType')) : contentType;
+
+                    // Decode base64 data
+                    Blob attachmentBody = EncodingUtil.base64Decode(attachmentBase64Data);
+
+                    // Create an attachment
+                    Attachment attachment = new Attachment();
+                    attachment.ParentId = caseObj.Id;
+                    attachment.Name = attachmentFileName;
+                    attachment.Body = attachmentBody;
+                    attachment.ContentType = attachmentContentType;
+
+                    attachments.add(attachment);
+                }
+            }
+
+            // Insert all attachments
+            if (!attachments.isEmpty()) {
+                insert attachments;
+                System.debug('Attachments created: ' + attachments.size());
+            }
+
+            return caseObj.Id; // Return the case Id
+        } catch (Exception ex) {
+            throw new AuraHandledException('Error creating Case or Attachments: ' + ex.getMessage());
+        }
+    } else {
+        throw new AuraHandledException('Input list is empty. Cannot create a case.');
+    }
+}
+
+    
+ @AuraEnabled 
+    public static List<Registrar_Document_List__c> getPickListValuesIntoList(){
+        List<Registrar_Document_List__c> awsIntgrt = Registrar_Document_List__c.getAll().values();
+        system.debug('awsIntgrt ' + awsIntgrt);        
+        return awsIntgrt;
+    }    
+    
+    
+    
+    @AuraEnabled 
+    public static ResultWrapper saveAccountRecords( String dynamicRowsList ) {
+    	ResultWrapper resultWrapper = new ResultWrapper();
+    	try {
+    		List<Account> accountRecordsList = (List<Account>) JSON.deserialize(dynamicRowsList, List<Account>.class);
+    		insert accountRecordsList;
+    		resultWrapper.messageType = 'success';
+    	} catch(Exception err) {
+    		resultWrapper.message = err.getMessage(); 
+            resultWrapper.messageType = 'error';
+    	}
+        return resultWrapper;
+    }
+ 
+    public class ResultWrapper {
+    	@AuraEnabled public String message;
+    	@AuraEnabled public String messageType;
+    }
+    
+    
+     @AuraEnabled
+    public static void saveAccounts(List<Account> accList){
+        Insert accList;
+    }
+    @AuraEnabled
+    public static void createCaseWithAttachments(Case caseRecord, List<Attachment> attachments) {
+        try {
+            // Insert the case record
+            insert caseRecord;
+            
+            // Insert the attachments
+            for (Attachment attachment : attachments) {
+                attachment.ParentId = caseRecord.Id; // Associate attachment with the Case
+            }
+            
+            if (!attachments.isEmpty()) {
+                insert attachments;
+            }
+            
+        } catch (Exception e) {
+            throw new AuraHandledException('Error creating case or attachments: ' + e.getMessage());
+        }
+    }
+    
+    
+}
+
+
+
+
