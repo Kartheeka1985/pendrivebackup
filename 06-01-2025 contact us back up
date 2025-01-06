@@ -215,14 +215,83 @@ This is the Contact us template
         <span class="icon-menu" aria-hidden="true"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbar161">
-        <ul class="mod-menu mod-list nav ">
-            <li class="nav-item item-624"><a href="/contact-us/admission-enquiry" class="dropdown-item">Admission &amp; Counseling Enquiry</a></li>
-            <li class="nav-item item-625"><a href="/contact-us/other-enquiries" class="dropdown-item">Other Enquiries</a></li>
-            <li class="nav-item item-626"><a href="/contact-us/directions-location-map" class="dropdown-item">Directions &amp; Location Map</a></li>
-            <li class="nav-item item-627"><a href="/contact-us/about-pune" class="dropdown-item">About Pune</a></li>
-            <li class="nav-item item-628 parent"><a href="/contact-us/jobs-at-flame" class="dropdown-item">Work with us</a></li>
-            <li class="nav-item item-630"><a href="/contact-us/invite-flame-to-your-school" class="dropdown-item">Invite FLAME to your School for a Webinar</a></li>
-        </ul>
+   
+        <div class="mod-menu mod-list nav ">
+            <h4 style="text-align: center; margin-bottom:30px;">Query Assistance</h4>
+            <br/>
+             <form class="contact-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <label for="fname">First Name</label>
+                            <input type="text" class="form-control" id="fname" placeholder="First Name" />
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <label for="lname">Last Name</label>
+                            <input type="text" class="form-control" id="lname" placeholder="Last Name" />
+                            
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email" />
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <label for="phone">Phone</label>
+                            <input type="text" class="form-control" id="phone" placeholder="Phone" />
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <label for="year">Passing Year</label>
+                            <input type="text" class="form-control" id="year" placeholder="Passing Year" />
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <label for="number">Student Number</label>
+                            <input type="text" class="form-control" id="number" placeholder="Student Number" />
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-floating mb-3">
+                    <label for="message">Message</label>
+                    <textarea class="form-control" placeholder="Message" id="message" style="height: 120px"></textarea>
+                    
+                </div>
+                
+                 <button type="submit" style="background-color:#041e39;color: #fff; border: none;font-size: 16px;cursor: pointer; }">
+                     Submit
+                 </button>
+            </form>
+        </div>
+        <html tag="style">
+            .form-control, .inputbox {
+            display: block;
+            width: 100%;
+            height: calc(1.9496rem + 1px); 
+            padding: 0rem 0rem;
+            }
+           
+        </html>
+        
+        
     </div>
 </nav>
 </div></div></div>
