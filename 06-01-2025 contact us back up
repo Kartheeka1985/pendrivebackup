@@ -1,0 +1,355 @@
+This is the Contact us template 
+
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                controller="LwcRegistertemplateController" access="global">
+    <ltng:require styles="{!$Resource.Flamesitecss}" />
+    <ltng:require styles="{!$Resource.Flamesitecss2}" />
+    <body class="site-default navigation-default theme-default layout-default-sidebar com_content view-category item-402" data-jver="5">
+        <div class="t4-wrapper">
+            <div class="t4-content">
+                <div class="t4-content-inner">
+                    <div id="t4-header" class="t4-section  t4-header  t4-palette-mainnav">
+                        <div class="border-top-sush"></div>
+                        <div class="container">
+                            <div class="flame-topbar  ">
+                                <div class="flame-topbar__logo">
+                                    <!-- closed menu - logo -->
+                                    <a aria-label="Home" class="flame-topbar__logo-link" data-gtm="main-logo" href="https://www.flame.edu.in/">
+                                        <img alt="FLAME University" class="flame-topbar__logo-img" id="top_mark" src="https://www.flame.edu.in/images/FLAME-Logo.png"/> </a>
+                                </div>
+                                <div class="button-wrapper-for-older-browsers">
+                                    <div class="flame-topbar__menu-button" onclick="{!c.toggleSidenav}">
+                                        <a aria-controls="flame-site-menu" aria-expanded="false" class="flame-topbar__menu-button flame-js-site-menu-button" data-gtm="mearch-button" href="#footer" onclick="return false;">
+                                            <span class="menu-text">Menu</span>
+                                            <img alt="" class="close-x" src="https://www.flame.edu.in/images/menu-mag.svg" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div> <!-- flame-topbar -->
+                        </div> <!-- container -->
+                        <div class="menubackdrop-white">
+                            <a aria-label="Home" class="flame_logo_banner" href="https://www.flame.edu.in/" id="flame_logo_banner">
+                                <img alt="FLAME University" src="https://www.flame.edu.in/images/FLAME-menu-banner.svg"/> </a>
+                        </div> <!-- menubackdrop-white-->
+                        <div id="dark-menu-ks" class="menubackdrop-dark"></div>
+                        <header id="main-header">
+                            <nav class="navbar navbar-expand-lg container">
+                                <a class="navbar-brand" >
+                                    <img src="https://www.flame.edu.in/images/white-Logo-FLAME.svg"  class="logo-inner"/></a>
+                                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarNav">
+                                    <ul class="navbar-nav ml-auto">
+                                        <li class="nav-item ">
+                                            <a class="nav-link" href="/academics">Home </a>
+                                        </li>
+                                        <li class="nav-item ">
+                                            <a class="nav-link" href="/programs">Request Document </a>
+                                        </li>
+                                        <li class="nav-item "> 
+                                            <a class="nav-link" href="/faculty">Request Assistance </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>  <!--navbar navbar-expand-lg container -->
+                        </header> <!-- main-header -->
+                    </div> <!-- id="t4-header" class="t4-section  t4-header  t4-palette-mainnav" -->
+                    <html tag="style">
+                        .logo-inner {
+                        width: 120px;
+                        height: 120px;
+                        margin-top: -15px;
+                        margin-left: 15px;
+                        }
+                        .navbar-expand-lg .navbar-nav {
+                        float: right;
+                        margin-top: -100px;
+                        }
+                        .flame-topbar__menu-button {
+                        position: fixed;
+                        top: 0px;
+                        right: 0px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        width: 80px;
+                        height: 80px;
+                        background: #FCB900;
+                        color: white;
+                        font-size: 16px;
+                        font-weight: 400;
+                        transition: background-color 0.3s;
+                        box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
+                        text-transform: uppercase;
+                        text-decoration: none;
+                        letter-spacing: 0;
+                        z-index: 999; /* Ensure it stays above all content */
+                        }
+                        .flame-topbar__menu-button:hover,
+                        .flame-topbar__menu-button:focus {
+                        background-color: #1d3557;
+                        }
+                        .menu-btn {
+                        cursor: pointer;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-around;
+                        width: 30px;
+                        height: 25px;
+                        background: transparent;
+                        border: none;
+                        }
+                        .line {
+                        width: 100%;
+                        height: 4px;
+                        background-color: white;
+                        border-radius: 2px;
+                        transition: 0.3s;
+                        }
+                        .progress-line {
+                        transform-origin: left;
+                        z-index: 9999;
+                        scale: 0 1;
+                        animation-name: progressLine;
+                        animation-timing-function: linear;
+                        animation-timeline: scroll();
+                        }
+                        .section-padding {
+                        padding: 90px 0;
+                        }
+                        #projectTab li button.active {
+                        color: yellow !important;
+                        background-color: #121212 !important;
+                        }
+                        @keyframes progressLine {
+                        to {
+                        scale: 1 1;
+                        }
+                        }
+                    </html>               
+                    <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+                    <div id="t4-masthead" class="t4-section  t4-masthead  t4-palette-blue">
+                        <div class="t4-content">
+                <div class="custom">
+                     <div class="ja-masthead">
+                        <div class="ja-masthead-detail" style="background:url(/images/titlebanners/about-flame.jpg);background-size:cover">
+                            <div class="inner-page-mask">
+                                <div class="container">
+                                    <h3 class="ja-masthead-title">CONTACT US</h3>
+                                    <div class="ja-masthead-description">Reach out to us</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div></div>
+                    </div>
+            <div id="t4-breadcrumbs-cust" class="t4-section  t4-breadcrumbs-cust">
+                <div class="t4-section-inner container">
+                    <div class="t4-module module " id="Mod17">
+                        <div class="module-inner">
+                            <div class="module-ct">
+                                <nav role="navigation" aria-label="breadcrumbs" >
+                                    <ol class="mod-breadcrumbs breadcrumb">
+                                        <li class="active">
+                                            <img src="{!$Resource.Bankicons}" alt="FLAME University" 
+                                             style=" width: 12px;height: 12px;" /> &nbsp;
+                                        </li>
+                                        <li itemprop="itemListElement" ><span property="item" typeof="WebPage"><a itemprop="item" href="/?catid[0]=" class="pathway"><span itemprop="name">Home</span></a></span>
+                                            <span class="divider"></span>
+                                            <meta itemprop="position" content="1"/>
+                                        </li>
+                                        <li aria-current="page" itemprop="itemListElement"  class="mod-breadcrumbs__item breadcrumb-item active"><span itemprop="name">Contact Us</span>				
+                                            <meta itemprop="position" content="2"/>
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div></div></div></div></div>  
+        <div id="t4-main-body" class="t4-section  t4-main-body">
+<div class="t4-section-inner container"><div class="t4-row row">
+<div class="t4-col col-12 col-lg">
+<div id="system-message-container" aria-live="polite"></div>
+<div class="com-content-category-blog blog " >
+<div class="category-desc clearfix">
+<div class="container">
+<div class="row">
+<div class="col-md-4">
+<p><iframe width="100%" height="450" style="border: 0;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.123779212138!2d73.72954971484272!3d18.523307787407393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bc338f698dd1%3A0x26bb10488cf7fe3c!2sFLAME%20University!5e0!3m2!1sen!2sin!4v1635578255222!5m2!1sen!2sin" allowfullscreen="allowfullscreen" loading="lazy"></iframe></p>
+</div>
+<div class="col-sm-8  ">
+<div class="row">
+<div class="col-sm-6 box-shadow  ">
+<div class="card-header">
+<h4 class="my-0 font-weight-normal"><img src="{!$Resource.Maillingicons}" alt="FLAME University" 
+                                             style=" width: 12px;height: 12px;" /> Toll Free: <span class="card-title pricing-card-title"> 1-800-209-4567 </span></h4>
+</div>
+</div>
+<div class="col-sm-6 box-shadow  ">
+<div class="card-header">
+<h4 class="my-0 font-weight-normal"><img src="{!$Resource.Emailicons}" alt="Email" 
+                                             style=" width: 12px;height: 12px;" />  Email: <span class="card-title pricing-card-title"> enquiry@flame.edu.in </span></h4>
+</div>
+</div>
+<div class="col-sm-6 box-shadow  ">
+<h4 class="item-title">Campus Address :</h4>
+<div class="icons-right-text"><b>FLAME University</b><br/>Gat No. 1270, Lavale, Off. Pune Bengaluru Highway, Pune - 412115, Maharashtra, India.</div>
+</div>
+<div class="col-sm-6 box-shadow  ">
+<h4 class="item-title">Mailing Address :</h4>
+<div class="icons-right-text"><b>FLAME University</b><br/>401, Phoenix Complex, Bund Garden Road, Opp. Residency Club, Pune - 411001, Maharashtra, India.</div>
+</div>
+</div>
+<div class="clear-fix"> </div>
+<div class="emailphone">For admission enquiries related to undergraduate program call <a href="tel:1-800-209-4567">1-800-209-4567</a> (toll-free) or <a href="tel:+919172335812">+91-9172335812</a>.<br/>For admission enquiries related to postgraduate programs call <a href="tel:1-800-209-4567">1-800-209-4567</a> (toll-free) or <a href="tel:+919607010633">+91-9607010655</a>.</div>
+<div class="clear-fix"> </div>
+<div>For all press-related inquiries (including, but not limited to, requests for high-res images, interviews, magazine credits, releases), please contact Suchi Adhikari at This email address is being protected from spambots. You need JavaScript enabled to view it.</div>
+<div class="clear-fix"> </div>
+</div>
+</div>
+</div>								</div>
+		</div>
+</div>
+<div class="t4-col sidebar-r col-12 col-lg-3">
+<div class="t4-module module " id="Mod161">
+    <div class="module-inner">
+        <div class="module-ct">
+<nav class="navbar navbar-expand-md" aria-label="Contact - Right Menu">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbar161" aria-controls="navbar161" aria-expanded="false" aria-label="Toggle Navigation">
+        <span class="icon-menu" aria-hidden="true"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar161">
+        <ul class="mod-menu mod-list nav ">
+            <li class="nav-item item-624"><a href="/contact-us/admission-enquiry" class="dropdown-item">Admission &amp; Counseling Enquiry</a></li>
+            <li class="nav-item item-625"><a href="/contact-us/other-enquiries" class="dropdown-item">Other Enquiries</a></li>
+            <li class="nav-item item-626"><a href="/contact-us/directions-location-map" class="dropdown-item">Directions &amp; Location Map</a></li>
+            <li class="nav-item item-627"><a href="/contact-us/about-pune" class="dropdown-item">About Pune</a></li>
+            <li class="nav-item item-628 parent"><a href="/contact-us/jobs-at-flame" class="dropdown-item">Work with us</a></li>
+            <li class="nav-item item-630"><a href="/contact-us/invite-flame-to-your-school" class="dropdown-item">Invite FLAME to your School for a Webinar</a></li>
+        </ul>
+    </div>
+</nav>
+</div></div></div>
+</div>
+</div></div>
+</div>
+</div> 
+<div id="t4-section-9" class="t4-section  t4-section-9   p-0">
+</div>
+<div class="custom">
+	<section class="box-3-link">
+<div class="link-box-style">
+<div class="container">
+<div class="row-eq-height">
+<div class="">
+<h3 class="sub-title">Learn more about FLAME</h3>
+</div>
+</div>
+<div class="row">
+<div class=" col-lg-3 col-sm-6">
+<div class="padding-20 boder-box-1"><a href="/contact-us/admission-enquiry"><span style="font-size: 18px;">HAVE QUESTIONS? </span> <br/>ASK US ANYTHING</a></div>
+</div>
+<div class="col-lg-3 col-sm-6">
+<div class="padding-20 boder-box-1"><a href="/admissions/apply"><span style="font-size: 18px;">START YOUR JOURNEY</span> <br/>APPLY NOW</a></div>
+</div>
+<div class="col-lg-3 col-sm-6">
+<div class="padding-20 boder-box-1"><a href="/admissions/visit-us"><span style="font-size: 18px;">EXPLORE FLAME</span> <br/>BOOK A CAMPUS TOUR</a></div>
+</div>
+<div class="col-lg-3 col-sm-6 links-area align-self-center ">
+<ul>
+<li><a href="/contact-us/invite-flame-to-your-school">Invite Us To Your School</a></li>
+<li><a href="/admissions/download-brochure">Download Brochure</a></li>
+<li><a href="/campus-life/virtual-tour">Virtual Tour</a></li>
+</ul>
+</div>
+</div>
+<div class="newsletter-form row">
+<div class="col-md-9">
+<div class="row align-self-center">
+<div class="col-md-4 align-self-center">
+<h3 class="sub-title">Subscribe to Our Quarterly Newsletter</h3>
+</div>
+<div class="col-md-5 align-self-center text-white">Stay updated with the latest news and events related to the FLAME community.</div>
+<div class="col-md-3 align-self-center"><a href="/newsletters/subscribe" class="l_hp__overview_btn ">Subscribe Now</a></div>
+</div>
+</div>
+<div class="col-md-9"></div>
+</div>
+</div>
+</div>
+    </section>
+      </div> 
+        <div id="t4-section-9" class="t4-section  t4-section-9   p-0">
+                            <footer>
+                            <div class="container">
+                                <div class="foo-all">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="logo-foot">
+                                                <img src="https://www.flame.edu.in/images/footer/white-Logo-FLAME.png" alt="FLAME Logo"/>
+                                                <p>
+                                                    <img src="{!$Resource.Bankicons}" alt="FLAME University" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Gat No. 1270, Lavale, Off. Pune Bengaluru Highway, Pune - 412115, Maharashtra, India.
+                                                </p>
+                                                <p>
+                                                    <img src="{!$Resource.Maillingicons}" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Toll-free: 1-800-209-4567  
+                                                    <br/>
+                                                    <img src="{!$Resource.Emailicons}" alt="Email" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Email: enquiry@flame.edu.in 
+                                                </p>
+                                                <p style="font-size:14px;">
+                                                    Sponsoring Body: Foundation for Liberal And Management Education Society.
+                                                </p>
+                                            </div> 
+                                        </div> 
+                                        <div class="col-lg-9 ">
+                                            <div class="row">
+                                                <div class="col-lg-2 "></div>
+                                                <div class="col-lg-10 ">
+                                                    <div class="col social">
+                                                        <ul> 
+                                                            <li><a href="https://www.facebook.com/FlameUniversity" title="Facebook" target="_blank" style="color: #fff;"><img src="{!$Resource.Facebookicon}" alt="Facebook" target="_blank"/></a></li>
+                                                            <li><a href="https://twitter.com/flameuniversity" target="_blank" title="Twitter" style="color: #fff;"><img src="{!$Resource.Twittericons}" alt="Twitter" target="_blank"/> </a></li>
+                                                            <li><a href="https://instagram.com/flameuniversity/" target="_blank" title="Instagram" style="color: #fff;"><img src="{!$Resource.instagramicons}" alt="Instagram" target="_blank"/> </a></li>
+                                                            <li><a href="https://www.youtube.com/user/FLAMEUniversity/" target="_blank" title="Youtube" style="color: #fff;"><img src="{!$Resource.youtubeicons}" alt="YouTube" target="_blank" /> </a></li>
+                                                            <li><a href="https://www.linkedin.com/company/flameuniversity/" target="_blank" title="Linkedin" style="color: #fff;"><img src="{!$Resource.Linkdinicons}" alt="LinkedIn" target="_blank"/> </a></li>
+                                                            <li><a href="https://www.flame.edu.in/voice-of-flame" target="_blank" title="Voice of FLAME" style="color: #fff;"><img src="{!$Resource.rsssquareicons}" alt="RSS" target="_blank"/> </a></li>
+                                                            <li><a href="/flame-social-wall">All Social Media</a></li>
+                                                        </ul>
+                                                    </div> </div>
+                                            </div>
+                                            <div class="row pad-top-40 foot-links">
+                                                <div class="col-lg-3 ">
+                                                    <h5>HOME</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Home</a></li></ul>
+                                                </div>
+                                                <div class="col-lg-3 ">
+                                                    <h5>REQUEST DOCUMENT</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Document</a></li></ul>
+                                                </div>
+                                                <div class="col-lg-3  ">
+                                                    <h5>REQUEST ASSISTANCE</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Contact Us</a></li></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </footer>
+                            <section class="footer-bottom">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            Copyright 2024. All rights reserved. FLAME University
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    <a href='javascript:' id='back-to-top'><i class='fa fa-chevron-up'></i></a>
+                </div> <!-- t4-content-inner -->
+            </div> <!-- t4-content -->
+        </div> <!-- t4-wrapper -->
+    </body>
+</aura:component>
