@@ -1,0 +1,570 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                controller="LwcRegistertemplateController" access="global">
+    
+ 
+    <ltng:require styles="{!$Resource.Flamesitecss}" />
+    <ltng:require styles="{!$Resource.Flamesitecss2}" />
+    <body class="site-default navigation-default theme-default layout-default-sidebar com_content view-category item-402" data-jver="5">
+        <div class="t4-wrapper">
+            <div class="t4-content">
+                <div class="t4-content-inner">
+                    <div id="t4-header" class="t4-section  t4-header  t4-palette-mainnav">
+                        <div class="border-top-sush"></div>
+                        <div class="container">
+                            <div class="flame-topbar  ">
+                                <div class="flame-topbar__logo">
+                                    <!-- closed menu - logo -->
+                                    <a aria-label="Home" class="flame-topbar__logo-link" data-gtm="main-logo" href="https://www.flame.edu.in/">
+                                        <img alt="FLAME University" class="flame-topbar__logo-img" id="top_mark" src="https://www.flame.edu.in/images/FLAME-Logo.png"/> </a>
+                                </div>
+                                <div class="button-wrapper-for-older-browsers">
+                                    <div class="flame-topbar__menu-button" onclick="{!c.toggleSidenav}">
+                                        <a aria-controls="flame-site-menu" aria-expanded="false" class="flame-topbar__menu-button flame-js-site-menu-button" data-gtm="mearch-button" href="#footer" onclick="return false;">
+                                            <span class="menu-text">Menu</span>
+                                            <img alt="" class="close-x" src="https://www.flame.edu.in/images/menu-mag.svg" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div> <!-- flame-topbar -->
+                        </div> <!-- container -->
+                        <div class="menubackdrop-white">
+                            <a aria-label="Home" class="flame_logo_banner" href="https://www.flame.edu.in/" id="flame_logo_banner">
+                                <img alt="FLAME University" src="https://www.flame.edu.in/images/FLAME-menu-banner.svg"/> </a>
+                        </div> <!-- menubackdrop-white-->
+                        <div id="dark-menu-ks" class="menubackdrop-dark"></div>
+                        <header id="main-header">
+                            <nav class="navbar navbar-expand-lg container">
+                                <a class="navbar-brand" >
+                                    <img src="https://www.flame.edu.in/images/white-Logo-FLAME.svg"  class="logo-inner"/></a>
+                                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarNav">
+                                    <ul class="navbar-nav ml-auto">
+                                        <li class="nav-item ">
+                                            <a class="nav-link" href="/academics">Home </a>
+                                        </li>
+                                        <li class="nav-item ">
+                                            <a class="nav-link" href="/programs">Request Document </a>
+                                        </li>
+                                        <li class="nav-item "> 
+                                            <a class="nav-link" href="/faculty">Request Assistance </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>  <!--navbar navbar-expand-lg container -->
+                        </header> <!-- main-header -->
+                        
+                        <!--     ////////////////////////////Header menu/////////////       -->
+    <header class="sticky-top bg-light" id="header" style="{!v.isImageVisible ? 'display: block;' : 'display: none;'}">
+        <div class="progress-line bg-warning py-1 w-100 position-fixed top-0"></div>
+        <div class="header border-bottom border-secondary-subtle py-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 d-flex align-items-center justify-content-between">
+                        
+                        <div class="logo">
+                            <a href="" class="text-dark fw-bold text-decoration-none fs-3">
+                                <img
+                                     alt="FLAME University"
+                                     class="flame-topbar__logo-img"
+                                     src="https://www.flame.edu.in/images/FLAME-Logo.png"/>
+                                
+                            </a>
+                        </div>
+                        <!--     logo end       -->
+                        
+                        <!--     navigation menu       -->
+                        <nav class="main-menu">
+                            <ul class="d-flex column-gap-3 list-unstyled m-0 p-0 flex-wrap">
+                             <!--   <li class="active"><a href="#" class="text-warning text-decoration-none fw-semibold" style="color:#041e39; !important;">Home</a></li> -->
+                                <li><a href="#section1" class="text-warning text-decoration-none fw-semibold link-opacity-50-hover">Home</a></li>
+                                <li><a href="#section3" class="text-warning text-decoration-none fw-semibold link-opacity-50-hover">Request Document</a></li>
+                                <li><a href="#section4" class="text-warning text-decoration-none fw-semibold link-opacity-25-hover">Request Assistance</a></li>
+                            </ul>
+                            <div class="flame-topbar__menu-button" onclick="{!c.toggleSidenav}" id="menuButton">
+                                <a aria-controls="flame-site-menu" aria-expanded="false" class="flame-topbar__menu-button flame-js-site-menu-button" data-gtm="mearch-button" href="#footer" onclick="return false;">
+                                    <span class="menu-text">Menu</span>
+                                    <img alt="" class="close-x" src="https://www.flame.edu.in/images/menu-mag.svg" />
+                                </a>
+                            </div>
+                        </nav>
+                        <!--     navigation menu end       -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header> 
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div> <!-- id="t4-header" class="t4-section  t4-header  t4-palette-mainnav" -->
+                    <html tag="style">
+                        .logo-inner {
+                        width: 120px;
+                        height: 120px;
+                        margin-top: -15px;
+                        margin-left: 15px;
+                        }
+                        .navbar-expand-lg .navbar-nav {
+                        float: right;
+                        margin-top: -100px;
+                        }
+                        .flame-topbar__menu-button {
+                        position: fixed;
+                        top: 0px;
+                        right: 0px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        width: 80px;
+                        height: 80px;
+                        background: #FCB900;
+                        color: white;
+                        font-size: 16px;
+                        font-weight: 400;
+                        transition: background-color 0.3s;
+                        box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
+                        text-transform: uppercase;
+                        text-decoration: none;
+                        letter-spacing: 0;
+                        z-index: 999; /* Ensure it stays above all content */
+                        }
+                        .flame-topbar__menu-button:hover,
+                        .flame-topbar__menu-button:focus {
+                        background-color: #1d3557;
+                        }
+                        .menu-btn {
+                        cursor: pointer;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-around;
+                        width: 30px;
+                        height: 25px;
+                        background: transparent;
+                        border: none;
+                        }
+                        .line {
+                        width: 100%;
+                        height: 4px;
+                        background-color: white;
+                        border-radius: 2px;
+                        transition: 0.3s;
+                        }
+                        .progress-line {
+                        transform-origin: left;
+                        z-index: 9999;
+                        scale: 0 1;
+                        animation-name: progressLine;
+                        animation-timing-function: linear;
+                        animation-timeline: scroll();
+                        }
+                        .section-padding {
+                        padding: 90px 0;
+                        }
+                        #projectTab li button.active {
+                        color: yellow !important;
+                        background-color: #121212 !important;
+                        }
+                        @keyframes progressLine {
+                        to {
+                        scale: 1 1;
+                        }
+                        }
+                    </html>               
+          
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                <div id="t4-masthead" class="t4-section  t4-masthead  t4-palette-blue">
+                        <div class="t4-content">
+                <div class="custom">
+                     <div class="ja-masthead">
+                        <div class="ja-masthead-detail" style="background:url(/images/titlebanners/about-flame.jpg);background-size:cover">
+                            <div class="inner-page-mask">
+                                <div class="container">
+                                    <h3 class="ja-masthead-title">Documents</h3>
+                                    <div class="ja-masthead-description">Checklist</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div></div>
+                    </div>       
+                    </div>
+     
+                    
+                   <section>
+<div class="about-section">
+<div class="container">
+<div class="col-lg-12 col-md-12 " style="border: 1px solid #E8A623;">
+     <div class="row">
+      <div class="col-md-12">
+       <div class="section_title text-center">
+         <h2>Required Information</h2>
+          <div class="brand_border">
+           <img src="{!$Resource.minusicons}" alt="Facebook"  class="fa fa-minus"/> 
+           <img src="{!$Resource.Handshakeicons}" alt="Facebook"  class="fas fa-handshake" style="width:20px;height:20px;"/>
+           <img src="{!$Resource.minusicons}" alt="Facebook" class="fa fa-minus"/>
+          </div>
+           <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. <br/>Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes</p>
+       </div>
+      </div>
+    </div>
+    
+    
+    
+
+    <div class="col-sm-12">
+        <div >
+            <table >
+                <tr>
+                    <td>     <label for="fname">First Name</label>
+                        <input type="text" id="fname" name="firstname" placeholder="Your name.."/> </td>
+                    
+                    <td>  <label for="lname">Last Name</label>
+                        <input type="text" id="lname" name="lastname" placeholder="Your last name.."/> </td>
+                    
+                </tr>
+                <tr>
+                    <td><label for="country">Country</label>
+                        <select id="country" name="country">
+                            <option value="australia">Australia</option>
+                            <option value="canada">Canada</option>
+                            <option value="usa">USA</option>
+                        </select>
+                    </td><td>
+                    <label for="subject">Subject</label>
+                    <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea></td>
+                    
+                </tr>
+                <tr>
+                    
+                    
+                    <input type="submit" value="Submit"/>  
+                    
+                    
+                    
+                </tr>
+            </table>
+        </div>
+
+                     
+                        
+<section class="tables-page-section" >
+    <div class="container">
+     <div class="row">
+      <div class="col-md-12">
+       <div class="section_title text-center">
+         <h2>Full table responsive</h2>
+          <div class="brand_border">
+           <img src="{!$Resource.minusicons}" alt="Facebook"  class="fa fa-minus"/> 
+           <img src="{!$Resource.Handshakeicons}" alt="Facebook"  class="fas fa-handshake" style="width:20px;height:20px;"/>
+           <img src="{!$Resource.minusicons}" alt="Facebook" class="fa fa-minus"/>
+          </div>
+           <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. <br/>Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes</p>
+       </div>
+      </div>
+    </div>
+   <div class="row">
+    <div class="col-sm-12">
+      <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <th>#</th>
+              <th>Table Heading</th>
+              <th>Table Heading</th>
+              <th>Table Heading</th>
+              <th>Table Heading</th>
+              <th>Table Heading</th>
+            </thead>
+            <tr>
+              <th>1</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+            <tr>
+              <th>2</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+            <tr>
+              <th>3</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+            <tr>
+              <th>4</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+            <tr>
+              <th>5</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+          </table>
+        </div>
+
+    </div>
+   </div>
+  </div>
+ </section>
+    
+    
+    <section class="tables-page-section" >
+    <div class="container">
+     <div class="row">
+      <div class="col-md-12">
+       <div class="section_title text-center">
+         <h2>Full table responsive</h2>
+          <div class="brand_border">
+           <img src="{!$Resource.minusicons}" alt="Facebook"  class="fa fa-minus"/> 
+           <img src="{!$Resource.Handshakeicons}" alt="Facebook"  class="fas fa-handshake" style="width:20px;height:20px;"/>
+           <img src="{!$Resource.minusicons}" alt="Facebook" class="fa fa-minus"/>
+          </div>
+           <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. <br/>Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes</p>
+       </div>
+      </div>
+    </div>
+   <div class="row">
+    <div class="col-sm-12">
+      <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <th>#</th>
+              <th>Table Heading</th>
+              <th>Table Heading</th>
+              <th>Table Heading</th>
+              <th>Table Heading</th>
+              <th>Table Heading</th>
+            </thead>
+            <tr>
+              <th>1</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+            <tr>
+              <th>2</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+            <tr>
+              <th>3</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+            <tr>
+              <th>4</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+            <tr>
+              <th>5</th>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+              <td>Table Cell</td>
+            </tr>
+          </table>
+        </div>
+
+    </div>
+   </div>
+  </div>
+ </section>
+                     
+</div>
+    </div></div></div></section>
+  <html tag="style">
+         section {
+            padding: 60px 0;
+            min-height: 100vh;
+        }
+.section_title {
+  margin-bottom: 40px;
+}
+
+.section_title h2 {
+  color: #333333;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+.brand_border .fa.fa-minus {
+    color: #fff;
+    font-size: 8px;
+    height: 2px;
+        background: #F8C01B none repeat scroll 0 0;
+    width: 100px;
+}
+.brand_border .fas.fa-handshake {
+    font-size: 14px;
+        color:#000000;
+}
+
+
+.section_title p {
+  color: #333333;
+  font-size: 14px;
+  line-height: 25px;
+  padding: 14px 0;
+}
+
+
+.tables-page-section .table {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.tables-page-section .table th {
+  border-bottom: 1px solid #ffffff;
+  border-right: 1px solid #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 20px;
+  text-align: center;
+}
+.tables-page-section .table td {
+  border-bottom: 1px solid #ffffff;
+  border-right: 1px solid #ffffff;
+  background: #f1f1f1;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  color: #666666;
+  padding: 10px 20px;
+}
+.tables-page-section .table thead th {
+  padding: 15px 20px;
+  text-align: center;
+  background: #ffba00 !important;
+}
+.tables-page-section .table tr th {
+  background: #f1f1f1;
+}           
+                    
+                    </html>                 
+              
+                    
+                    
+                    <!-- ///////////////////////////////////////////////////////////////////////////////////////// -->
+        <div id="t4-section-9" class="t4-section  t4-section-9   p-0">
+                            <footer>
+                            <div class="container">
+                                <div class="foo-all">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="logo-foot">
+                                                <img src="https://www.flame.edu.in/images/footer/white-Logo-FLAME.png" alt="FLAME Logo"/>
+                                                <p>
+                                                    <img src="{!$Resource.Bankicons}" alt="FLAME University" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Gat No. 1270, Lavale, Off. Pune Bengaluru Highway, Pune - 412115, Maharashtra, India.
+                                                </p>
+                                                <p>
+                                                    <img src="{!$Resource.Maillingicons}" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Toll-free: 1-800-209-4567  
+                                                    <br/>
+                                                    <img src="{!$Resource.Emailicons}" alt="Email" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Email: enquiry@flame.edu.in 
+                                                </p>
+                                                <p style="font-size:14px;">
+                                                    Sponsoring Body: Foundation for Liberal And Management Education Society.
+                                                </p>
+                                            </div> 
+                                        </div> 
+                                        <div class="col-lg-9 ">
+                                            <div class="row">
+                                                <div class="col-lg-2 "></div>
+                                                <div class="col-lg-10 ">
+                                                    <div class="col social">
+                                                        <ul> 
+                                                            <li><a href="https://www.facebook.com/FlameUniversity" title="Facebook" target="_blank" style="color: #fff;"><img src="{!$Resource.Facebookicon}" alt="Facebook" target="_blank"/></a></li>
+                                                            <li><a href="https://twitter.com/flameuniversity" target="_blank" title="Twitter" style="color: #fff;"><img src="{!$Resource.Twittericons}" alt="Twitter" target="_blank"/> </a></li>
+                                                            <li><a href="https://instagram.com/flameuniversity/" target="_blank" title="Instagram" style="color: #fff;"><img src="{!$Resource.instagramicons}" alt="Instagram" target="_blank"/> </a></li>
+                                                            <li><a href="https://www.youtube.com/user/FLAMEUniversity/" target="_blank" title="Youtube" style="color: #fff;"><img src="{!$Resource.youtubeicons}" alt="YouTube" target="_blank" /> </a></li>
+                                                            <li><a href="https://www.linkedin.com/company/flameuniversity/" target="_blank" title="Linkedin" style="color: #fff;"><img src="{!$Resource.Linkdinicons}" alt="LinkedIn" target="_blank"/> </a></li>
+                                                            <li><a href="https://www.flame.edu.in/voice-of-flame" target="_blank" title="Voice of FLAME" style="color: #fff;"><img src="{!$Resource.rsssquareicons}" alt="RSS" target="_blank"/> </a></li>
+                                                            <li><a href="/flame-social-wall">All Social Media</a></li>
+                                                        </ul>
+                                                    </div> </div>
+                                            </div>
+                                            <div class="row pad-top-40 foot-links">
+                                                <div class="col-lg-3 ">
+                                                    <h5>HOME</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Home</a></li></ul>
+                                                </div>
+                                                <div class="col-lg-3 ">
+                                                    <h5>REQUEST DOCUMENT</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Document</a></li></ul>
+                                                </div>
+                                                <div class="col-lg-3  ">
+                                                    <h5>REQUEST ASSISTANCE</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Contact Us</a></li></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </footer>
+                            <div class="footer-bottom">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            Copyright 2024. All rights reserved. FLAME University
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <a href='javascript:' id='back-to-top'><i class='fa fa-chevron-up'></i></a>
+                </div> <!-- t4-content-inner -->
+            </div> <!-- t4-content -->
+        </div> <!-- t4-wrapper -->
+    </body>
+</aura:component>
