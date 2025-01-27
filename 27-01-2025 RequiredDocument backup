@@ -1,0 +1,1329 @@
+27-01-2025 RequiredDocument backup
+
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                controller="LwcRegistertemplateController" access="global">
+  
+    <aura:attribute name="isImageVisible" type="Boolean" default="false" />
+    <aura:attribute name="lastScrollTop" type="Integer" default="0" />
+    <aura:attribute name="selectedStep" type="string" default="step1"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="documentList" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.fetchRecords}" />
+    <aura:attribute name="fixedHeader" type="String" />
+    <aura:attribute name="isOpen" type="Boolean" default="false" />
+    
+    <aura:handler name="destroy" value="{!this}" action="{!c.onDestroy}"/>
+    <aura:attribute name="Rdocument" type="Boolean" default="false" />
+    
+    <!-- Attribute to hold rows -->
+    <aura:attribute name="rows" type="List" default="[{'fileName':'','description':''}]" />
+    <aura:attribute name="maxRows" type="Integer" default="5" />
+    <aura:attribute name="errorMessage" type="String" default="" />
+    
+    <!--Record Id of current object where this component will be added. -->
+    <aura:attribute name="recordId" type="Id" />
+    <!--Showing spinner while uploading -->
+    <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <!--List of file which are uploaded -->
+    <aura:attribute name="FilesUploaded" type="List" />
+    <!-- Attribute to store dynamic rows data -->
+    
+    
+    <aura:attribute name="numberOfRows" type="Integer" description="Number of Rows to add dynamically" access="private" default="1" />
+    <aura:attribute name="dynamicRowsList" type="List" description="List of Rows that are created dynamically" access="private" />
+    <aura:attribute name="message" type="String" default="" description="Success or error message" access="private" />
+    <aura:attribute name="messageType" type="String" description="Success or error message type" access="private" />
+    <aura:attribute name="picklistOptions" type="List" />
+    <aura:attribute name="picklistOptions1" type="List" />
+    <aura:attribute name="picklistOptions2" type="List" />
+    
+    <aura:attribute name="FirstName" type="String" />
+    <aura:attribute name="LastName" type="String" />
+    <aura:attribute name="email" type="String" />
+    <aura:attribute name="phone" type="String" />
+    <aura:attribute name="year" type="String" />
+    <aura:attribute name="program" type="String" />
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="Studentno" type="String" />
+    <aura:attribute name="RequestDescription" type="String" />
+    <aura:attribute name="isDisable" type="Boolean" default="true"/>
+    <aura:attribute name="showPopup" type="Boolean" default="false"/>
+    
+    
+    <ltng:require styles="{!$Resource.Flamesitecss}" />
+    <ltng:require styles="{!$Resource.Flamesitecss2}" />
+    <ltng:require styles="{!$Resource.Flamesitecss3}" />
+    <html tag="style">
+        .flame-topbar {
+        box-shadow: none;
+        border: 0 !important;
+        width: 100%;
+        position: relative;
+        background-color: #ffffff;
+        
+        }
+        
+        .menubackdrop-white {
+        background-color: transparent; /* Transparent banner */
+        }
+        
+        .navbar-brand img.logo-inner {
+        opacity: 0.8; /* Slightly transparent logo for aesthetics */
+        }
+        
+        .test1{   
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        background: #fff;
+        min-height: 100%;
+        min-width: 1024px;
+        width: 100%;
+        height: auto;
+        content: 60px;
+        padding: 0px;
+        border: 5px #73008C;
+        margin-left: 0px;
+        margin-right: 0px;
+        z-index: 3;
+        }
+     
+    </html>
+   <!-- /////////////////////////////////////////////scroll up  header//////////////////////////////////////////// --> 
+    <div  style="{!v.isImageVisible ? 'display: block;' : 'display: none;'}">
+        <div style="background: #ffffff;
+                    height: 90px;
+                    position: fixed;
+                    top: 0;
+                    transition: top 0.2s ease-in-out;
+                    width: 100%;
+                    z-index: 999;" id="secondary-header">
+            
+            <nav class="navbar navbar-expand-lg container" style="margin-top: 0px;">
+                <a class="navbar-brand">
+                    <img src="https://www.flame.edu.in/images/FLAME-Logo.png"  style="z-index:3;"/>
+                </a>
+                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item ">
+                            <a class="nav-link" href="/academics" style=" color: #000;">Home </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="/programs" style=" color: #000;">Request Document </a>
+                        </li>
+                        <li class="nav-item "> 
+                            <a class="nav-link" href="/faculty" style=" color: #000;">Request Assistance </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>  <!--navbar navbar-expand-lg container -->
+            <div class="flame-topbar__menu-button" onclick="{!c.toggleSidenav}">
+                <a  class="flame-topbar__menu-button flame-js-site-menu-button" style="z-index:3;" >
+                    <span class="menu-text">Menu</span>
+                    <img alt="" class="close-x" src="https://www.flame.edu.in/images/menu-mag.svg" />
+                </a>
+            </div>
+            
+            
+            
+        </div>
+    </div>
+    
+    <!-- /////////////////////////////////////////////main header//////////////////////////////////////////// -->
+    <body class="site-default navigation-default theme-default layout-default-sidebar com_content view-category item-402" data-jver="5">
+        <div class="t4-wrapper">
+            <div class="t4-content">
+                <div class="t4-content-inner">
+                    <div id="t4-header" class="t4-section  t4-header  t4-palette-mainnav">
+                        <div class="border-top-sush"></div>
+                        
+                        <div id="dark-menu-ks" class="menubackdrop-dark"></div>
+                        <header id="main-header">
+                            <nav class="navbar navbar-expand-lg container">
+                                <a class="navbar-brand">
+                                    <img src="https://www.flame.edu.in/images/white-Logo-FLAME.svg"  style="width:130px;height:130px;margin-top:80px;z-index:3;"/>
+                                </a>
+                                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarNav">
+                                    <ul class="navbar-nav ml-auto">
+                                        <li class="nav-item ">
+                                            <a class="nav-link" href="/academics">Home </a>
+                                        </li>
+                                        <li class="nav-item ">
+                                            <a class="nav-link" href="/programs">Request Document </a>
+                                        </li>
+                                        <li class="nav-item "> 
+                                            <a class="nav-link" href="/faculty">Request Assistance </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>  <!--navbar navbar-expand-lg container -->
+                             <div class="flame-topbar__menu-button" onclick="{!c.toggleSidenav}">
+                            <a  class="flame-topbar__menu-button flame-js-site-menu-button" style="z-index:3;" >
+                                <span class="menu-text">Menu</span>
+                                <img alt="" class="close-x" src="https://www.flame.edu.in/images/menu-mag.svg" />
+                            </a>
+                        </div>
+ 
+                        </header> <!-- main-header -->
+                        
+                        <!--n////////////////////////////////Section start //////////////////////////////////////////////-->        
+   <!-- background image scrolling -->
+    <html tag="style">
+        #section1 {
+        //background: #5c53aa;
+        //  color: #8d86c3;
+        border-top: 3px solid #FCB900 !important;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        list-style: none;
+        margin: 0;
+        padding: 0            
+        }
+        .section1 li { 
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        animation: imageAnimation 50s linear infinite; 
+        }
+        
+        .section1 li:nth-child(1) { 
+        background-image: url({!$Resource.sideimage3});
+        }
+        .section1 li:nth-child(2) { 
+        background-image: url({!$Resource.sideimage2});
+        animation-delay: 10s; 
+        }
+        .section1 li:nth-child(3) { 
+        background-image: url({!$Resource.jobportalpanel3});
+        animation-delay: 20s; 
+        }
+        .section1 li:nth-child(4) { 
+        background-image: url({!$Resource.image1});
+        animation-delay: 30s; 
+        }
+        .section1 li:nth-child(5) { 
+        background-image: url({!$Resource.sideimage2});
+        animation-delay: 40s; 
+        }
+        
+        @keyframes imageAnimation { 
+        0% { 
+        opacity: 0; 
+        animation-timing-function: ease-in;
+        }
+        10% {
+        opacity: 1;
+        animation-timing-function: ease-out;
+        }
+        20% {
+        opacity: 1;
+        }
+        30% {
+        opacity: 0;
+        }
+        }
+        .title-top {
+        font-size: 60px;
+        padding-bottom: 30px;
+        color:#fcb900 !important;
+        }
+        
+        .title-tx {
+        font-size: 20px;
+        opacity: 0.8;
+        text-align: center;
+        color:#fcb900 !important;
+        }
+        #top_mark {
+        display: none; /* Initially hide the image */
+        }
+        .progress-line {
+        transform-origin: left;
+        z-index: 9999;
+        scale: 0 1;
+        animation-name: progressLine;
+        animation-timing-function: linear;
+        animation-timeline: scroll();
+        }
+        .section-padding {
+        padding: 90px 0;
+        }
+        
+    </html>
+                    </div> <!-- id="t4-header" class="t4-section  t4-header  t4-palette-mainnav" -->
+                    <div id="t4-masthead" class="t4-section  t4-masthead  t4-palette-blue">
+                        <div class="t4-content">
+                            <div class="custom">
+                                <div class="ja-masthead">
+                                    <div class="ja-masthead-detail" >
+                                        <ul class="section1">
+                                            <li></li>
+                                            <li></li>
+                                            <li></li>
+                                            <li></li>
+                                            <li></li>
+                                        </ul>
+                                        <div class="inner-page-mask">
+                                            <div class="container">
+                                                <h3 class="ja-masthead-title">Register Connect</h3>
+                                                <div class="ja-masthead-description">Empower Your Future</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+        <!--     ////////////////////////////Section-3 End/////////////       -->   
+        <html tag="style">
+            
+            .tables-page-section .table {
+            text-align: center;
+            margin-bottom: 40px;
+            }
+            .tables-page-section .table th {
+            border-bottom: 1px solid #ffffff;
+            border-right: 1px solid #ffffff;
+            font-family: alternate-gothic-condensed-a, sans-serif;//'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 10px 20px;
+            text-align: center;
+            }
+            .tables-page-section .table td {
+            border-bottom: 1px solid #ffffff;
+            border-right: 1px solid #ffffff;
+            background: #f1f1f1;
+            font-family: 'Lato', sans-serif;
+            font-size: 13px;
+            color: #666666;
+            padding: 10px 20px;
+            }
+            .tables-page-section .table thead th {
+            padding: 15px 20px;
+            text-align: center;
+            background: #ffba00 !important;
+            }
+            .tables-page-section .table tr th {
+            background: #f1f1f1;
+            }
+            .addbutton{
+            margin-right: 40px;
+            }
+        </html>      
+        <html tag="style">
+        /* For screen sizes 393x852 */
+@media only screen and (max-width: 393px) and (max-height: 852px) {
+    .tables-page-section .table {
+        margin-bottom: 20px;
+        font-size: 12px;
+    }
+    .tables-page-section .table th, 
+    .tables-page-section .table td {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    .tables-page-section .table thead th {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+    .addbutton {
+        margin-right: 20px;
+    }
+}
+
+/* For screen sizes 480x1040 */
+@media only screen and (max-width: 480px) and (max-height: 1040px) {
+    .tables-page-section .table {
+        margin-bottom: 30px;
+        font-size: 13px;
+    }
+    .tables-page-section .table th, 
+    .tables-page-section .table td {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+    .tables-page-section .table thead th {
+        padding: 10px 15px;
+        font-size: 15px;
+    }
+    .addbutton {
+        margin-right: 25px;
+    }
+}
+
+/* For screen sizes 430x932 */
+@media only screen and (max-width: 430px) and (max-height: 932px) {
+    .tables-page-section .table {
+        margin-bottom: 25px;
+        font-size: 12px;
+    }
+    .tables-page-section .table th, 
+    .tables-page-section .table td {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    .tables-page-section .table thead th {
+        padding: 9px 12px;
+        font-size: 14px;
+    }
+    .addbutton {
+        margin-right: 22px;
+    }
+}
+
+/* For screen sizes 820x1180 */
+@media only screen and (max-width: 820px) and (max-height: 1180px) {
+    .tables-page-section .table {
+        margin-bottom: 35px;
+        font-size: 14px;
+    }
+    .tables-page-section .table th, 
+    .tables-page-section .table td {
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+    .tables-page-section .table thead th {
+        padding: 12px 18px;
+        font-size: 16px;
+    }
+    .addbutton {
+        margin-right: 30px;
+    }
+}
+
+/* For screen sizes 1559x975 */
+@media only screen and (max-width: 1559px) and (max-height: 975px) {
+    .tables-page-section .table {
+        margin-bottom: 40px;
+        font-size: 15px;
+    }
+    .tables-page-section .table th, 
+    .tables-page-section .table td {
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+    .tables-page-section .table thead th {
+        padding: 15px 20px;
+        font-size: 17px;
+    }
+    .addbutton {
+        margin-right: 40px;
+    }
+}
+
+        </html>               
+                     <div id="t4-breadcrumbs-cust" class="t4-section  t4-breadcrumbs-cust">
+                <div class="t4-section-inner container">
+                    <div class="t4-module module " id="Mod17">
+                        <div class="module-inner">
+                            <div class="module-ct">
+                                <nav role="navigation" aria-label="breadcrumbs" >
+                                    <ol class="mod-breadcrumbs breadcrumb">
+                                        <li class="active">
+                                            <img src="{!$Resource.Bankicons}" alt="FLAME University" 
+                                             style=" width: 12px;height: 12px;" /> &nbsp;
+                                        </li>
+                                        <li itemprop="itemListElement" ><span property="item" typeof="WebPage"><a itemprop="item" href="/?catid[0]=" class="pathway"><span itemprop="name">Registrar Connect</span></a></span>
+                                            <span class="divider"></span>
+                                            <meta itemprop="position" content="1"/>
+                                        </li>
+                                       
+                                    </ol>
+                                </nav>
+                            </div></div></div></div></div>  
+                    
+                    <div class="slds-m-around_xx-large">
+                        
+                        <div id="t4-main-body" class="t4-section  t4-main-body">
+                            <div class="t4-section-inner container">
+                                <div class="t4-row row">
+                                    <div class="t4-col col-12 col-lg">
+                                        <div id="system-message-container" aria-live="polite"></div>
+                                        <div class="com-content-category-blog blog " >
+                                            <div class="category-desc clearfix">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            
+                                                            <p>Welcome to the Registrar Connect site, your gateway to any assistance you may need from the Registrar’s office. Use the Request Document tab to request copies of official documents from the Registrar’s office, and use the Request Assistance tab for any other matters pertaining to the Registrar’s office.</p>
+                                                            <p>Our educational philosophy is rooted in the concept of Liberal Education. We believe that the
+                                                                real world does not function in isolation, and neither should knowledge. By interconnecting
+                                                                social sciences, humanities, physical sciences, business, design, natural sciences, fine and
+                                                                performing arts, communications management, and computational sciences, we equip our students
+                                                                for an ever-changing new world. At FLAME, our students interact with various disciplines and are
+                                                                encouraged to address pressing world challenges through different perspectives. Our aim is to
+                                                                help them grow as critical thinkers and lifelong learners, as they lead purposeful lives, rather
+                                                                than just narrow professions. Therefore, we foster an environment that is personalized,
+                                                                participatory, and provides a transformational experience to aid in their personal and
+                                                                professional journeys.</p>
+                                                            
+                                                        </div>
+             
+                                                    </div></div></div></div></div></div>            
+                        <lightning:progressIndicator currentStep="{!v.selectedStep}" type="base">
+                            <lightning:progressStep label="Required Information" value="step1" onclick="{!c.selectStep1}"/>
+                            <lightning:progressStep label="Required Document" value="step2" onclick="{!c.selectStep2}"/>
+                            <lightning:progressStep label="Required Attachments" value="step3" onclick="{!c.selectStep3}"/>
+                            <lightning:progressStep label="Step Four" value="step4" onclick="{!c.selectStep4}"/>
+                        </lightning:progressIndicator>   
+                        <div class="slds-p-around--medium">
+                            <div class="{!v.selectedStep == 'step1' ? 'slds-show' : 'slds-hide'}">
+                                <div class="page-header"><h1 itemprop="headline">Required Information</h1> </div><br/>
+                                <div class="col-md-12">
+                                    <div class="formContainer uk-form-horizontal" id="rsform_9_page_0">
+                                        <div class="uk-grid">
+                                            <div class="uk-width-1-1">  
+                                                <div class="uk-margin rsform-block rsform-block-first-name rsform-type-textbox ">
+                                                    <label class="uk-form-label formControlLabel" for="First name">First Name <strong class="formRequired">(*)</strong></label>
+                                                    <div class="formControls uk-form-controls">
+                                                        <ui:inputText class="rsform-input-box uk-input" aura:id="firstNameInp" value="{!v.FirstName}" required="true"/>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                                <div class="uk-margin rsform-block rsform-block-last-name rsform-type-textbox ">
+                                                    <label class="uk-form-label formControlLabel" for="Last name">Last Name <strong class="formRequired">(*)</strong></label>
+                                                    <div class="formControls uk-form-controls">
+                                                        <ui:inputText class="rsform-input-box uk-input" aura:id="lastNameInp" value="{!v.LastName}" required="true"/>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="uk-margin rsform-block rsform-block-email rsform-type-textbox">
+                                                    <label class="uk-form-label formControlLabel" for="Email">Email:<strong class="formRequired">(*)</strong></label>
+                                                    <div class="formControls uk-form-controls">
+                                                        <ui:inputEmail class="rsform-input-box uk-input" value="{!v.email}" aura:id="emailId" required="true" keyup="{!c.sendSearchKeyChange}" updateOn="keyup"/> 
+                                                    </div>
+                                                </div>  
+                                                
+                                                <div class="uk-margin rsform-block rsform-block-program rsform-type-textbox">
+                                                    <label class="uk-form-label formControlLabel" for="Program">Program <strong class="formRequired">(*)</strong></label>
+                                                    <div  class="formControls uk-form-controls">
+                                                        <ui:inputText class="rsform-input-box uk-input" aura:id="programName" value="{!v.program}" required="true"/>
+                                                    </div>
+                                                </div> 
+                                                <div class="uk-margin rsform-block rsform-block-program rsform-type-textbox">
+                                                    <label class="uk-form-label formControlLabel" for="Year of Passing">Year of Passing <strong class="formRequired">(*)</strong></label>
+                                                    <div  class="formControls uk-form-controls">
+                                                        <ui:inputEmail class="rsform-input-box uk-input" aura:id="passingyear" value="{!v.year}" required="true"/>
+                                                    </div>
+                                                </div>   
+                                                <div class="uk-margin rsform-block rsform-block-phone rsform-type-textbox">
+                                                    <label class="uk-form-label formControlLabel" for="Mobile No">Mobile No <strong class="formRequired">(*)</strong></label>
+                                                    <div  class="formControls uk-form-controls">
+                                                        <ui:inputPhone class="rsform-input-box uk-input" value="{!v.phone}" aura:id="phoneNo" required="true" keyup="{!c.phoneKeyChange}" updateOn="keyup"/>
+                                                    </div>
+                                                </div>  
+                                                
+                                                <div class="uk-margin rsform-block rsform-block-phone rsform-type-textbox">
+                                                    <label class="uk-form-label formControlLabel" for="Mobile No">Student No <strong class="formRequired">(*)</strong></label>
+                                                    <div  class="formControls uk-form-controls">
+                                                        <ui:inputPhone class="rsform-input-box uk-input" value="{!v.phone}" aura:id="phoneNo" required="true" keyup="{!c.phoneKeyChange}" updateOn="keyup"/>
+                                                    </div>
+                                                </div>  
+                                                
+                                            </div>   
+                                            
+                                            
+                                        </div></div></div>
+                                
+                            </div>
+                            <div class="{!v.selectedStep == 'step2' ? 'slds-show' : 'slds-hide'}">
+                                <div class="page-header"><h1 itemprop="headline">Required Document</h1> </div><br/>
+                                <div class="col-md-12">
+                                                                    <aura:if isTrue="{!!empty(v.message)}">
+                                    <div class="slds-notify_container slds-is-relative">
+                                        <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.messageType }" role="alert">
+                                            <div class="slds-notify__content">
+                                                <h2 class="slds-text-heading_small">{!v.message}</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </aura:if>
+                                <div style="text-align:left;margin-left:80px;margin-right:40px; ">  
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <th>#</th>
+                                                <th>Document Name</th>
+                                                <th>First/Original Copy Fee(Rs.)</th>
+                                                <th>Subsequent/Duplicate copy Fee(Rs.)</th>
+                                                <th>Number of Copies</th>
+                                                <th>Add More</th>
+                                            </thead>
+                                            <aura:iteration items="{!v.dynamicRowsList}" var="eachRow" indexVar="index">
+                                                <tr>
+                                                    <th scope="row">{! index + 1 }</th>
+                                                    <td title="Document Name">
+                                                        <lightning:select name="accName" value="{!eachRow.Name}"  
+                                                                          required="true" class="nameInput"   
+                                                                          aura:id="searchField" >
+                                                            <option value="">-- Select --</option>
+                                                            <aura:iteration items="{!v.picklistOptions}" var="option">
+                                                                <option value="{!option.value}">{!option.label}</option>
+                                                            </aura:iteration>
+                                                            
+                                                        </lightning:select>
+                                                    </td>
+                                                    
+                                                    <td title="First/Original Copy Fee(Rs.)">
+                                                        <lightning:select name="OriginalCopyFee" value="{!eachRow.OriginalCopyFee}"   class="OriginalCopyFeeInput"   
+                                                                          aura:id="OriginalCopyFeeId">
+                                                            <option value="">-- Select --</option>
+                                                            <aura:iteration items="{!v.picklistOptions1}" var="option">
+                                                                <option value="{!option.value}">{!option.label}</option>
+                                                            </aura:iteration>
+                                                            
+                                                        </lightning:select>
+                                                    </td> 
+                                                    
+                                                    <td title="Subsequent/Duplicate copy Fee(Rs.)">
+                                                        <lightning:select name="DuplicatecopyFee" value="{!eachRow.DuplicatecopyFee}"   
+                                                                          class="DuplicatecopyFeeInput"   
+                                                                          aura:id="DuplicatecopyFee">
+                                                            <option value="">-- Select --</option>
+                                                            <aura:iteration items="{!v.picklistOptions2}" var="option">
+                                                                <option value="{!option.value}">{!option.label}</option>
+                                                            </aura:iteration>
+                                                        </lightning:select>
+                                                    </td>
+                                                    
+                                                    <td title="Number of Copies">
+                                                        <lightning:input aura:id="dynamicRowsForm" 
+                                                                         required="true" 
+                                                                         maxlength="50" 
+                                                                         name="accNumber" 
+                                                                         value="{!eachRow.Numberofcopies}" />
+                                                    </td>
+                                                    
+                                                    <td class="slds-p-around_xx-small">
+                                                        
+                                                        <!-- <lightning:button name="{! eachRow.rowNumber }" variant="brand" class="cloneClass" label="Clone" onclick="{!c.cloneRow}" /> -->
+                                                        <aura:if isTrue="{! eachRow.rowNumber == 1 }">
+                                                            <lightning:buttonIcon alternativeText="Add row" variant="container" class="successClass" iconName="utility:add" onclick="{!c.addRow}" />
+                                                        </aura:if>
+                                                        <aura:if isTrue="{! eachRow.rowNumber > 1 }">
+                                                            <lightning:buttonIcon name="{! eachRow.rowNumber }" alternativeText="Delete row" variant="container" class="errorClass" iconName="utility:close" onclick="{!c.deleteRow}" />
+                                                            
+                                                        </aura:if>
+                                                    </td>
+                                                </tr>
+                                            </aura:iteration>
+                                        </table>
+                                    </div>  
+                                </div>
+                                   </div>    
+                                              
+                            </div>
+                            <div class="{!v.selectedStep == 'step3' ? 'slds-show' : 'slds-hide'}">
+                                  <!-- Button to Add a new Row -->
+                                <div class="slds-float_right slds-p-bottom_small" >
+                                    <lightning:button label=" + " variant="brand" onclick="{!c.addRow2}" class="addbutton" />
+                                </div>
+                               <div class="page-header"><h1 itemprop="headline">Required Attachments (Optional) </h1> </div><br/>
+                                <div class="col-md-12">
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <th>#</th>
+                                                <th>File Uploader</th>
+                                                <th>Description</th>
+                                                <th>Actions</th>
+                                                
+                                            </thead>
+                                            
+                                            <aura:iteration items="{!v.rows}" var="row" indexVar="index">
+                                                <tr>
+                                                    <td>{!index + 1}</td>
+                                                    <td>
+                                                        <!-- File Uploader -->
+                                                        <lightning:input aura:id="fuploader" type="file" name="{!index}"  multiple="true"
+                                                                         onchange="{!c.handleFilesChange}" />
+                                                        <div class="slds-text-body_small slds-text-color_error">{!row.fileName}</div>
+                                                    </td>
+                                                    <td>
+                                                        <lightning:textarea aura:id="description" name="description"  value="{!row.description}" 
+                                                                            onchange="{!c.updateDescription}" />
+                                                    </td>
+                                                    <td>
+                                                        <lightning:buttonIcon iconName="utility:delete" size="large" variant="bare" alternativeText="Remove"
+                                                                              onclick="{!c.removeRow}" name="{!index}" />
+                                                    </td>
+                                                </tr>
+                                            </aura:iteration>
+                                            
+                                        </table>
+                                    </div>  
+                                    
+                                    
+                                    
+                                </div>    
+                                
+                            </div>
+                            <div class="{!v.selectedStep == 'step4' ? 'slds-show' : 'slds-hide'}">
+                                <p><b>Step 4</b></p>
+                            </div>
+                        </div>
+                        
+                        </div></div>
+                        
+                        <div style="margin-left:auto;margin-right:auto;display:block;margin-top:2%;margin-bottom:0%; text-align: center; ">
+                            <button disabled="{!v.selectedStep != 'step1' ? '' : 'disabled'}" class="slds-button slds-button--neutral" onclick="{!c.handlePrev}">Back</button>  
+                            <aura:if isTrue="{!v.selectedStep != 'step4'}">
+                                <button class="slds-button slds-button--brand" onclick="{!c.handleNext}">Next</button>
+                            </aura:if>
+                            <aura:if isTrue="{!v.selectedStep == 'step4'}">   
+                                <button class="slds-button slds-button--brand" onclick="{!c.handleFinish}">Finish</button>  
+                            </aura:if>
+                        </div>
+                    </div>    
+                    
+                    <!--//////////////////////////////////////Footer ////////////////////////////////////////-->       
+                    
+                    <div id="t4-section-9" class="t4-section  t4-section-9   p-0">
+                        <footer>
+                            <div class="container">
+                                <div class="foo-all">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="logo-foot">
+                                                <img src="https://www.flame.edu.in/images/footer/white-Logo-FLAME.png" alt="FLAME Logo"/>
+                                                <p>
+                                                    <img src="{!$Resource.Bankicons}" alt="FLAME University" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Gat No. 1270, Lavale, Off. Pune Bengaluru Highway, Pune - 412115, Maharashtra, India.
+                                                </p>
+                                                <p>
+                                                    <img src="{!$Resource.Maillingicons}" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Toll-free: 1-800-209-4567  
+                                                    <br/>
+                                                    <img src="{!$Resource.Emailicons}" alt="Email" style="width: 18px; height: 18px; vertical-align: middle;margin-bottom: 0px;" /> 
+                                                    Email: enquiry@flame.edu.in 
+                                                </p>
+                                                <p style="font-size:14px;">
+                                                    Sponsoring Body: Foundation for Liberal And Management Education Society.
+                                                </p>
+                                            </div> 
+                                        </div> 
+                                        <div class="col-lg-9 ">
+                                            <div class="row">
+                                                <div class="col-lg-2 "></div>
+                                                <div class="col-lg-10 ">
+                                                    <div class="col social">
+                                                        <ul> 
+                                                            <li><a href="https://www.facebook.com/FlameUniversity" title="Facebook" target="_blank" style="color: #fff;"><img src="{!$Resource.Facebookicon}" alt="Facebook" target="_blank"/></a></li>
+                                                            <li><a href="https://twitter.com/flameuniversity" target="_blank" title="Twitter" style="color: #fff;"><img src="{!$Resource.Twittericons}" alt="Twitter" target="_blank"/> </a></li>
+                                                            <li><a href="https://instagram.com/flameuniversity/" target="_blank" title="Instagram" style="color: #fff;"><img src="{!$Resource.instagramicons}" alt="Instagram" target="_blank"/> </a></li>
+                                                            <li><a href="https://www.youtube.com/user/FLAMEUniversity/" target="_blank" title="Youtube" style="color: #fff;"><img src="{!$Resource.youtubeicons}" alt="YouTube" target="_blank" /> </a></li>
+                                                            <li><a href="https://www.linkedin.com/company/flameuniversity/" target="_blank" title="Linkedin" style="color: #fff;"><img src="{!$Resource.Linkdinicons}" alt="LinkedIn" target="_blank"/> </a></li>
+                                                            <li><a href="https://www.flame.edu.in/voice-of-flame" target="_blank" title="Voice of FLAME" style="color: #fff;"><img src="{!$Resource.rsssquareicons}" alt="RSS" target="_blank"/> </a></li>
+                                                            <li><a href="/flame-social-wall">All Social Media</a></li>
+                                                        </ul>
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                            <div class="row pad-top-40 foot-links">
+                                                <div class="col-lg-3 ">
+                                                    <h5>HOME</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Home</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-lg-3 ">
+                                                    <h5>REQUEST DOCUMENT</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Document</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-lg-3  ">
+                                                    <h5>REQUEST ASSISTANCE</h5>
+                                                    <ul>
+                                                        <li><a href="/campus-life/student-life">Contact Us</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </footer>
+                        <section class="footer-bottom">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        Copyright 2024. All rights reserved. FLAME University
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <a href='javascript:' id='back-to-top'><i class='fa fa-chevron-up'></i></a>
+                </div> <!-- t4-content-inner -->
+            </div> <!-- t4-content -->
+        </div> <!-- t4-wrapper -->
+    </body>
+    
+</aura:component>
+
+({
+    doInit: function (component, event, helper) {
+        // Listen to scroll events
+        window.addEventListener('scroll', $A.getCallback(function () {
+            helper.handleScroll(component);
+        }));
+    },
+   /* doInit: function(component, event, helper) {
+       // Add scroll event listener
+        window.addEventListener("scroll", $A.getCallback(function () {
+            helper.handleSectionVisibility(component);
+        }));
+       component.set("v.isImageVisible", false);
+        helper.addRowHelper(component, 1);
+    // First picklist
+        var action = component.get("c.getselectedtermId");
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.picklistOptions", response.getReturnValue());
+             // alert('v.picklistOptions'+response.getReturnValue());   
+            } else {
+                console.error("Error fetching picklist options for the first picklist");
+            }
+        });
+        $A.enqueueAction(action);
+        
+        var action3 = component.get("c.getselectedtermId1");
+        action3.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.picklistOptions1", response.getReturnValue());
+                //alert('v.picklistOptions1'+response.getReturnValue());
+            } else {
+                console.error("Error fetching picklist options for the first picklist");
+            }
+        });
+        $A.enqueueAction(action3);
+    
+        // Three picklist
+        var action2 = component.get("c.getselectedtermId2");
+        action2.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.picklistOptions2", response.getReturnValue());
+              // alert('v.picklistOptions2'+response.getReturnValue());  
+            } else {
+                console.error("Error fetching picklist options for the first picklist");
+            }
+        });
+        $A.enqueueAction(action2);
+    },*/
+    handleNext : function(component,event,helper){
+        var getselectedStep = component.get("v.selectedStep");
+        if(getselectedStep == "step1"){
+            component.set("v.selectedStep", "step2");
+        }
+        else if(getselectedStep == "step2"){
+            component.set("v.selectedStep", "step3");
+        }
+         else if(getselectedStep == "step3"){
+            component.set("v.selectedStep", "step4");
+        }
+    },
+     
+    handlePrev : function(component,event,helper){
+        var getselectedStep = component.get("v.selectedStep");
+        if(getselectedStep == "step2"){
+            component.set("v.selectedStep", "step1");
+        }
+        else if(getselectedStep == "step3"){
+            component.set("v.selectedStep", "step2");
+        }
+        else if(getselectedStep == "step4"){
+            component.set("v.selectedStep", "step3");
+        }
+    },
+     
+    handleFinish : function(component,event,helper){
+        alert('Finished...');
+        component.set("v.selectedStep", "step1");
+    },
+     
+    selectStep1 : function(component,event,helper){
+        component.set("v.selectedStep", "step1");
+    },
+    selectStep2 : function(component,event,helper){
+        component.set("v.selectedStep", "step2");
+    },
+    selectStep3 : function(component,event,helper){
+        component.set("v.selectedStep", "step3");
+    },
+    selectStep4 : function(component,event,helper){
+        component.set("v.selectedStep", "step4");
+    },
+    
+    
+    
+    // Other controller methods...
+    
+    onDestroy: function(component, event, helper) {
+        // Remove scroll event listener on component destruction
+        window.removeEventListener("scroll", $A.getCallback(function() {
+            helper.handleScroll(component);
+        }));
+    },
+    
+    
+    toggleSidenav : function(component, event, helper) {
+        let isOpen = component.get("v.isOpen");
+        component.set("v.isOpen", !isOpen);
+    },
+    scrollToFirstSection: function(component, event, helper) {
+        document.getElementById('section1').scrollIntoView({ behavior: 'smooth' });
+    },
+    scrollToSection: function(component, event, helper) {
+        const sectionId = event.currentTarget.getAttribute("data-section");
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: "smooth" });
+        }
+    },
+    
+    handleScroll: function(component, event, helper) {
+        // Sections to track
+        const sections = ["section1", "section2", "section3", "section4"];
+        let currentSection = "";
+        
+        // Check which section is currently in view
+        sections.forEach((sectionId) => {
+            const section = document.getElementById(sectionId);
+            const rect = section.getBoundingClientRect();
+            
+            if (rect.top <= 100 && rect.bottom >= 100) {
+            currentSection = sectionId;
+        }
+                         });
+        
+        // Update fixedHeader based on current section in view
+        component.set("v.fixedHeader", currentSection);
+    },
+    closeSidebar:function(component, event, helper) {
+        component.set("v.isOpen", false);
+    },
+    //main table    
+    fetchRecords: function(component, event, helper) {
+        var action = component.get("c.fetchMetadataRecords");
+        
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log("Response State: ", state); // Debug log for state
+            if (state === "SUCCESS") {
+                alert("Fetched Records: ", response.getReturnValue()); // Debug log for data
+                component.set("v.documentList", response.getReturnValue());
+            } else if (state === "ERROR") {
+                var errors = response.getError();
+                console.error("Errors: ", errors); // Debug log for errors
+            }
+        });
+        
+        $A.enqueueAction(action);
+    },
+    //maintable toggle button 
+    toggleSection: function (component, event, helper) {
+        // Get the current value of the attribute
+        var currentValue = component.get("v.showSection5");
+        
+        // Toggle the value (true -> false, false -> true)
+        component.set("v.showSection5", !currentValue);
+    },
+    
+    //table-2
+    addRow2: function (component, event, helper) {
+        helper.addRow2(component);
+    },
+    removeRow: function (component, event, helper) {
+        const index = parseInt(event.getSource().get("v.name"), 10); // Safely parse the index
+        helper.removeRow(component, index);
+    },
+    handleFilesChange: function (component, event) {
+        const index = parseInt(event.getSource().get("v.name"), 10); // Safely parse the index
+        const fileInput = event.getSource().get("v.files")[0];
+        if (fileInput) {
+            const rows = component.get("v.rows");
+            if (rows[index]) { // Ensure index is valid
+                rows[index].fileName = fileInput.name;
+                component.set("v.rows", rows);
+            }
+        }
+    },
+    updateDescription: function (component, event) {
+        const index = parseInt(event.getSource().get("v.name"), 10); // Safely parse the index
+        const rows = component.get("v.rows");
+        if (rows[index]) { // Ensure index is valid
+            rows[index].description = event.getSource().get("v.value");
+            component.set("v.rows", rows);
+        }
+    },
+    
+    //table-1
+    addRow : function(component, event, helper) {
+        var loopVar = 1;
+        if(event.getSource().get('v.name') === 'multipleRows' && !$A.util.isEmpty('v.numberOfRows') ) {
+            loopVar = component.get('v.numberOfRows') > 10 ? 0 : component.get('v.numberOfRows'); 
+        }
+        helper.addRowHelper(component, loopVar);
+    },
+    
+   
+    
+    deleteRow : function(component, event, helper) {
+        var dynamicRowsList = component.get("v.dynamicRowsList");
+        var index = dynamicRowsList.findIndex(x => x.rowNumber === event.getSource().get('v.name'))
+        if(index != -1)
+            dynamicRowsList.splice(index, 1);
+        component.set("v.dynamicRowsList", dynamicRowsList);
+    },
+    
+    submitFunction: function(component, event, helper) {
+    var isValidate = true; // Initialize validation flag
+
+    // Get input fields and their values
+    var firstNameInp = component.find('firstNameInp');
+    var firstNameVal = firstNameInp ? firstNameInp.get('v.value') : '';
+
+    var lastNameInp = component.find('lastNameInp');
+    var lastNameVal = lastNameInp ? lastNameInp.get('v.value') : '';
+
+    var emailIdInp = component.find('emailId');
+    var emailIdVal = emailIdInp ? emailIdInp.get('v.value') : '';
+
+    var phoneNoInp = component.find('phoneNo');
+    var phoneNoVal = phoneNoInp ? phoneNoInp.get('v.value') : '';
+
+    var countryName = component.find('programName');
+    var countryNameVal = countryName ? countryName.get('v.value') : '';
+
+    var passingYear = component.find('passingyear');
+    var passingYearVal = passingYear ? passingYear.get('v.value') : '';
+
+    var studentNumber = component.find('snumber');
+    var studentNumberVal = studentNumber ? studentNumber.get('v.value') : '';
+
+    var title = component.find('title');
+    var titleVal = title ? title.get('v.value') : '';
+
+    
+    // Validation checks
+    if ($A.util.isUndefinedOrNull(firstNameVal) || $A.util.isEmpty(firstNameVal)) {
+        firstNameInp.set("v.errors", [{ message: 'First Name field is required' }]);
+        isValidate = false;
+    } else {
+        firstNameInp.set("v.errors", null);
+    }
+
+    if ($A.util.isUndefinedOrNull(lastNameVal) || $A.util.isEmpty(lastNameVal)) {
+        lastNameInp.set("v.errors", [{ message: 'Last Name field is required' }]);
+        isValidate = false;
+    } else {
+        lastNameInp.set("v.errors", null);
+    }
+
+    if ($A.util.isUndefinedOrNull(emailIdVal) || $A.util.isEmpty(emailIdVal)) {
+        emailIdInp.set("v.errors", [{ message: 'Email field is required' }]);
+        isValidate = false;
+    } else {
+        emailIdInp.set("v.errors", null);
+    }
+
+    if ($A.util.isUndefinedOrNull(phoneNoVal) || $A.util.isEmpty(phoneNoVal)) {
+        phoneNoInp.set("v.errors", [{ message: 'Phone field is required' }]);
+        isValidate = false;
+    } else {
+        phoneNoInp.set("v.errors", null);
+    }
+
+    if ($A.util.isUndefinedOrNull(studentNumberVal) || $A.util.isEmpty(studentNumberVal)) {
+        studentNumber.set("v.errors", [{ message: 'Student Number field is required' }]);
+        isValidate = false;
+    } else {
+        studentNumber.set("v.errors", null);
+    }
+
+    if ($A.util.isUndefinedOrNull(titleVal) || $A.util.isEmpty(titleVal)) {
+        title.set("v.errors", [{ message: 'Title field is required' }]);
+        isValidate = false;
+    } else {
+        title.set("v.errors", null);
+    }
+
+    if ($A.util.isUndefinedOrNull(countryNameVal) || $A.util.isEmpty(countryNameVal)) {
+        countryName.set("v.errors", [{ message: 'Please select a program option' }]);
+        isValidate = false;
+    } else {
+        countryName.set("v.errors", null);
+    }
+
+    if ($A.util.isUndefinedOrNull(passingYearVal) || $A.util.isEmpty(passingYearVal)) {
+        passingYear.set("v.errors", [{ message: 'Please select a passing year option' }]);
+        isValidate = false;
+    } else {
+        passingYear.set("v.errors", null);
+    }
+    // Validate description
+    //var description = component.find('description');
+    var descriptionVal = component.get("v.RequestDescription");
+  
+    
+    // If validation passes, call Apex method
+    if (isValidate) {
+        alert('Form submitted successfully');
+        var action = component.get("c.getRecordUpdate");
+        action.setParams({
+            "name": firstNameVal,
+            "lname": lastNameVal,
+            "email": emailIdVal,
+            "phone": phoneNoVal,
+            "title": titleVal,
+            "student": studentNumberVal,
+            "program": countryNameVal,
+            "year": passingYearVal,
+            "Description": descriptionVal
+        });
+
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                alert(response.getReturnValue());
+                component.set('v.parentId', result);
+                component.set("v.isModalHidden", false);
+            }
+        });
+        $A.enqueueAction(action);
+    }
+},
+
+    //submit button
+    submitDocument: function (component, event, helper) {
+       helper.uploadHelper(component, event);
+        
+    },
+ 
+    // Close the popup
+    closePopup: function (component, event, helper) {
+        component.set("v.showPopup", false);
+        window.location.reload();
+    },
+//Email validation  pattern
+   sendSearchKeyChange : function(component, event, helper) {
+        var emailField = component.find("emailId");
+        var emailFieldValue = emailField.get("v.value");
+        // Store Regular Expression
+        var regExpEmailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;  
+        // check if Email field in not blank,
+        // and if Email field value is valid then set error message to null, and remove error CSS class.
+        // ELSE if Email field value is invalid then add Error Style Css Class, and set the error Message.          
+        if(!$A.util.isEmpty(emailFieldValue)){   
+            if(emailFieldValue.match(regExpEmailformat)){
+                emailField.set("v.errors", [{message: null}]);
+                $A.util.removeClass(emailField, 'slds-has-error');                
+            }else{
+                $A.util.addClass(emailField, 'slds-has-error');
+                emailField.set("v.errors", [{message: "Please Enter a Valid Email Address"}]);               
+            }
+        } 
+    },
+    //phone pattern
+    phoneKeyChange : function(component, event, helper) {
+        var phoneField = component.find("phoneNo");
+        var phoneFieldValue = phoneField.get("v.value");
+        // Store Regular Expression
+        var regExpPhoneformat = /^\d{10}$/;  
+        // check if Email field in not blank,
+        // and if Email field value is valid then set error message to null, and remove error CSS class.
+        // ELSE if Email field value is invalid then add Error Style Css Class, and set the error Message.          
+        if(!$A.util.isEmpty(phoneFieldValue)){   
+            if(phoneFieldValue.match(regExpPhoneformat)){
+                phoneField.set("v.errors", [{message: null}]);
+                $A.util.removeClass(phoneField, 'slds-has-error');                
+            }else{
+                $A.util.addClass(phoneField, 'slds-has-error');
+                phoneField.set("v.errors", [{message: "Please Enter a Valid phone Number"}]);               
+            }
+        } 
+    },
+   
+})
+
+({
+     handleScroll: function (component) {
+        const header = document.getElementById('secondary-header');
+        let lastScrollTop = component.get("v.lastScrollTop") || 0;
+
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop < lastScrollTop) {
+            header.classList.add('scrolled');
+            component.set("v.isImageVisible", false);
+        } else {
+            header.classList.remove('scrolled');
+            component.set("v.isImageVisible", true);
+        }
+
+        component.set("v.lastScrollTop", scrollTop <= 0 ? 0 : scrollTop); // Update last scroll position
+    },
+       handleSectionVisibility: function (component) {
+        const section1 = document.querySelector("#section1");
+        const section2 = document.querySelector("#section2");
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const menuButton = document.getElementById("menuButton");
+        // Get section positions
+        const section1Top = section1.offsetTop;
+        const section2Top = section2.offsetTop;
+
+        if (scrollTop >= section1Top && scrollTop < section2Top) {
+            // In Section 1, hide the image
+            component.set("v.isImageVisible", false);
+        } else if (scrollTop >= section2Top) {
+            // In Section 2, show the image
+            component.set("v.isImageVisible", true);
+        }
+           // Ensure menu button stays visible
+         menuButton.classList.remove("hidden");
+    },
+    
+ 
+   
+    
+   addRowHelper : function(component, noOfRows) {
+        for(var index = 0; index < noOfRows; index++) {
+            var dynamicRowsList = component.get("v.dynamicRowsList");
+            dynamicRowsList.push({
+                'rowNumber':dynamicRowsList.length + 1,
+                'Name': '',
+                'OriginalCopyFee': '',
+                'DuplicatecopyFee': '',
+                'Numberofcopies': ''
+                
+            });
+            component.set("v.dynamicRowsList", dynamicRowsList);
+        }
+    },
+   
+   
+    addAccountRecord: function(component, event) {
+        //get the account List from component  
+        var accountList = component.get("v.accountList");
+        
+        component.set("v.accountList", accountList);
+    },
+    addRow2: function (component) {
+        const rows = component.get("v.rows");
+        const maxRows = component.get("v.maxRows");
+        if (rows.length < maxRows) {
+            rows.push({ fileName: '', description: '' });
+            component.set("v.rows", rows);
+            component.set("v.errorMessage", ""); // Clear error message
+        } else {
+            component.set("v.errorMessage", `You cannot add more than ${maxRows} rows.`);
+        }
+    },
+    removeRow: function (component, index) {
+        const rows = component.get("v.rows");
+        if (rows.length > 1) {
+            if (index >= 0 && index < rows.length) { // Validate index before removing
+                rows.splice(index, 1);
+                component.set("v.rows", rows);
+                component.set("v.errorMessage", ""); // Clear error message if any
+            } else {
+                component.set("v.errorMessage", "Invalid row index for deletion.");
+            }
+        } else {
+            component.set("v.errorMessage", "At least one row is required.");
+        }
+    },
+    
+uploadHelper: function (component, event) {
+    var dynamicRowsList = JSON.stringify(component.get("v.dynamicRowsList"));
+    var uploadjsondetails = JSON.stringify(component.get("v.rows"));
+
+    // Get the selected files using aura:id
+    var fileInput = component.find("fuploader").get("v.files");
+    if (!fileInput || fileInput.length === 0) {
+        alert("No file selected.");
+        return;
+    }
+
+    var file = fileInput[0];
+
+    // Check the file size
+    if (file.size > this.MAX_FILE_SIZE) {
+        alert(`File size cannot exceed ${this.MAX_FILE_SIZE} bytes.\nSelected file size: ${file.size}`);
+        return;
+    }
+
+    // Create a FileReader object
+    var objFileReader = new FileReader();
+
+    // Set onload function for FileReader
+    objFileReader.onload = $A.getCallback(function () {
+        var fileContents = objFileReader.result;
+        var base64Marker = "base64,";
+        var dataStart = fileContents.indexOf(base64Marker) + base64Marker.length;
+        fileContents = fileContents.substring(dataStart);
+
+        // Directly set the action to call the Apex method
+        var action = component.get("c.SaveFile");
+
+        // Set parameters for the Apex method
+        action.setParams({
+            fileName: file.name,
+            base64Data: fileContents, // Do NOT encode this string
+            contentType: file.type,
+            dynamicRowsList: dynamicRowsList,
+            rows: uploadjsondetails
+        });
+
+        // Set callback for the server action
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                alert("File uploaded successfully.");
+                component.set("v.showPopup", true);
+            } else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors && errors[0] && errors[0].message) {
+                    console.error("Error: " + errors[0].message);
+                    alert("Error: " + errors[0].message);
+                } else {
+                    console.error("Unknown error occurred.");
+                    alert("An unknown error occurred.");
+                }
+            } else if (state === "INCOMPLETE") {
+                console.error("Incomplete response from the server.");
+                alert("Incomplete response from the server.");
+            }
+        });
+
+        // Enqueue the action
+        $A.enqueueAction(action);
+    });
+
+    objFileReader.readAsDataURL(file);
+}
+
+})
+
+
